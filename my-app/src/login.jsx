@@ -1,30 +1,40 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';  // ✅ เพิ่ม useNavigate
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./App.css";
 
 function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const navigate = useNavigate();  // ✅ สร้าง navigate
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
-  const validUsers = [
-    { username: 'user1', password: 'password123' },
-    { username: 'user2', password: 'hello123' }
-  ];
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage("");
 
-    const user = validUsers.find(u => u.username === username);
+    try {
+      // ✅ เรียก API ไป backend
+      const res = await fetch("http://localhost:5000/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
 
-    if (!user) {
-      setMessage('❌ User not found');
-    } else if (user.password !== password) {
-      setMessage('❌ Incorrect password');
-    } else {
-      // ✅ ไม่ต้องขึ้นข้อความแล้ว เปลี่ยนหน้าไป Home เลย
-      navigate('/home');  // ⬅️ redirect ไปหน้าที่คุณตั้งไว้
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMessage(`❌ ${data.error || "Login failed"}`);
+        return;
+      }
+
+      // ✅ บันทึกข้อมูลไว้ใน localStorage
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("username", data.user.username);
+
+      // ✅ ไปหน้า home
+      navigate("/home");
+    } catch (err) {
+      setMessage("⚠️ Cannot connect to server");
     }
   };
 
@@ -36,19 +46,19 @@ function Login() {
           type="text"
           placeholder="Username"
           value={username}
-          onChange={e => setUsername(e.target.value)}
+          onChange={(e) => setUsername(e.target.value)}
           required
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
           required
         />
         <button type="submit">Login</button>
       </form>
-      <p className="message">{message}</p>
+      {message && <p className="message">{message}</p>}
     </div>
   );
 }
