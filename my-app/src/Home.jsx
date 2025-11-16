@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import "./Home.css";
+import "./Home.css"; // สไตล์ชีตของคุณ
 import { useNavigate } from "react-router-dom";
 
 function Home() {
   const navigate = useNavigate();
   const [cart, setCart] = useState([]);
+  const [isCartOpen, setIsCartOpen] = useState(false); // State สำหรับเปิด/ปิดป๊อปอัป
 
+  // ข้อมูลเกมและแอป (เหมือนเดิม)
   const games = [
     {
       id: 1,
@@ -44,14 +46,14 @@ function Home() {
     },
     {
       id: 6,
-      title: "Design Tool",
+      title: "Game",
       img: "https://via.placeholder.com/200x120?text=Design+Tool",
       category: "work",
       specs: { cpu: "Intel i7-7700", gpu: "NVIDIA GTX 1050", ram: "16 GB", price: 16000 },
     },
     {
       id: 7,
-      title: "Chess Master",
+      title: "Game",
       img: "https://via.placeholder.com/200x120?text=Chess+Master",
       category: "play",
       specs: { cpu: "Intel i3-4150", gpu: "Intel HD Graphics 4400", ram: "4 GB", price: 6000 },
@@ -89,6 +91,11 @@ function Home() {
     navigate("/recommend", { state: { cart } });
   };
 
+  // ฟังก์ชันสำหรับสลับการแสดงผลป๊อปอัป
+  const toggleCartPopup = () => {
+    setIsCartOpen(!isCartOpen);
+  };
+
   const playGames = games.filter((game) => game.category === "play");
   const workGames = games.filter((game) => game.category === "work");
 
@@ -97,6 +104,7 @@ function Home() {
       <h1>PIM TO BUY COM</h1>
       <p>Select games to add to your cart.</p>
 
+      {/* ส่วนแสดงเกม (เหมือนเดิม) */}
       <section className="category-section">
         <h2>เล่นเกม</h2>
         <div className="games-list">
@@ -116,6 +124,7 @@ function Home() {
         </div>
       </section>
 
+      {/* ส่วนแสดงโปรแกรมทำงาน (เหมือนเดิม) */}
       <section className="category-section">
         <h2>ทำงาน</h2>
         <div className="games-list">
@@ -135,19 +144,39 @@ function Home() {
         </div>
       </section>
 
-      <div className="cart-section">
-        <h2>Your Cart ({cart.length} games)</h2>
-        <ul>
-          {cart.map((item) => (
-            <li key={item.id}>{item.title}</li>
-          ))}
-        </ul>
+      {/* ลบส่วน .cart-section เดิมที่อยู่ด้านล่างออก
+        และแทนที่ด้วยไอคอนลอยและป๊อปอัป
+      */}
+
+      {/* ไอคอนตะกร้าลอย */}
+      <div className="cart-icon" onClick={toggleCartPopup}>
+        🛒 {/* คุณสามารถใช้ไอคอนรูปภาพหรือ FontAwesome แทนได้ */}
         {cart.length > 0 && (
-          <button className="confirm-button" onClick={confirmCart}>
-            Confirm Purchase
-          </button>
+          <span className="cart-count">{cart.length}</span>
         )}
       </div>
+
+      {/* ป๊อปอัปตะกร้า (จะแสดงเมื่อ isCartOpen เป็น true) */}
+      {isCartOpen && (
+        <div className="cart-popup">
+          <h3>Your Cart ({cart.length} games)</h3>
+          <ul>
+            {cart.length === 0 ? (
+              // เพิ่มสไตล์เล็กน้อยถ้าตะกร้าว่าง
+              <li style={{ background: 'none', color: '#aaa', textAlign: 'center', fontWeight: 'normal' }}>
+                Your cart is empty
+              </li>
+            ) : (
+              cart.map((item) => <li key={item.id}>{item.title}</li>)
+            )}
+          </ul>
+          {cart.length > 0 && (
+            <button className="confirm-button" onClick={confirmCart}>
+              Confirm Purchase
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }
