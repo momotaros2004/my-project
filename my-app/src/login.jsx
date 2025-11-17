@@ -31,8 +31,8 @@ function Login() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("username", data.user.username);
 
-      // ✅ ไปหน้า home
-      navigate("/home");
+      // ✅ ไปหน้า beforehome
+      navigate("/beforehome");
     } catch (err) {
       setMessage("⚠️ Cannot connect to server");
     }
