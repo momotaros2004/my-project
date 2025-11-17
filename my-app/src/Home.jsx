@@ -1,84 +1,23 @@
 import React, { useState } from "react";
-import "./Home.css"; // สไตล์ชีตของคุณ
+import "./Home.css";
 import { useNavigate } from "react-router-dom";
 
 function Home() {
   const navigate = useNavigate();
   const [cart, setCart] = useState([]);
-  const [isCartOpen, setIsCartOpen] = useState(false); // State สำหรับเปิด/ปิดป๊อปอัป
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
-  // ข้อมูลเกมและแอป (เหมือนเดิม)
   const games = [
-    {
-      id: 1,
-      title: "Valorant",
-      img: "/valorant.png",
-      category: "play",
-      specs: { cpu: "Intel i3-4150", gpu: "NVIDIA GeForce GT 730", ram: "4 GB", price: 8000 },
-    },
-    {
-      id: 2,
-      title: "Call of duty",
-      img: "/call of duty.png",
-      category: "play",
-      specs: { cpu: "Intel i5-7400", gpu: "NVIDIA GTX 1050", ram: "8 GB", price: 12000 },
-    },
-    {
-      id: 3,
-      title: "Dead by daylight",
-      img: "/dead by daylight.png",
-      category: "play",
-      specs: { cpu: "Intel i7-7700", gpu: "NVIDIA GTX 1060", ram: "16 GB", price: 18000 },
-    },
-    {
-      id: 4,
-      title: "csgo",
-      img: "/csgo.png",
-      category: "work",
-      specs: { cpu: "Intel i3-6100", gpu: "Intel HD Graphics 530", ram: "4 GB", price: 7000 },
-    },
-    {
-      id: 5,
-      title: "Delta force",
-      img: "/delta force.jpeg",
-      category: "work",
-      specs: { cpu: "Intel i5-6500", gpu: "Intel HD Graphics 530", ram: "8 GB", price: 10000 },
-    },
-    {
-      id: 6,
-      title: "Game",
-      img: "https://via.placeholder.com/200x120?text=Design+Tool",
-      category: "work",
-      specs: { cpu: "Intel i7-7700", gpu: "NVIDIA GTX 1050", ram: "16 GB", price: 16000 },
-    },
-    {
-      id: 7,
-      title: "Game",
-      img: "https://via.placeholder.com/200x120?text=Chess+Master",
-      category: "play",
-      specs: { cpu: "Intel i3-4150", gpu: "Intel HD Graphics 4400", ram: "4 GB", price: 6000 },
-    },
-    {
-      id: 8,
-      title: "Photo Editor",
-      img: "https://via.placeholder.com/200x120?text=Photo+Editor",
-      category: "work",
-      specs: { cpu: "Intel i5-7500", gpu: "NVIDIA GTX 1050 Ti", ram: "8 GB", price: 14000 },
-    },
-    {
-      id: 9,
-      title: "Space Shooter",
-      img: "https://via.placeholder.com/200x120?text=Space+Shooter",
-      category: "play",
-      specs: { cpu: "Intel i7-8700", gpu: "NVIDIA GTX 1070", ram: "16 GB", price: 22000 },
-    },
-    {
-      id: 10,
-      title: "Note Keeper",
-      img: "https://via.placeholder.com/200x120?text=Note+Keeper",
-      category: "work",
-      specs: { cpu: "Intel i3-7100", gpu: "Intel HD Graphics 630", ram: "4 GB", price: 7500 },
-    },
+    { id: 1, title: "Valorant", img: "/valorant.png", category: "play", specs: { cpu: "Intel i3-4150", gpu: "NVIDIA GeForce GT 730", ram: "4 GB", price: 8000 }},
+    { id: 2, title: "Call of duty", img: "/call of duty.png", category: "play", specs: { cpu: "Intel i5-7400", gpu: "NVIDIA GTX 1050", ram: "8 GB", price: 12000 }},
+    { id: 3, title: "Dead by daylight", img: "/dead by daylight.png", category: "play", specs: { cpu: "Intel i7-7700", gpu: "NVIDIA GTX 1060", ram: "16 GB", price: 18000 }},
+    { id: 4, title: "csgo", img: "/csgo.png", category: "work", specs: { cpu: "Intel i3-6100", gpu: "Intel HD Graphics 530", ram: "4 GB", price: 7000 }},
+    { id: 5, title: "Delta force", img: "/delta force.jpeg", category: "work", specs: { cpu: "Intel i5-6500", gpu: "Intel HD Graphics 530", ram: "8 GB", price: 10000 }},
+    { id: 6, title: "Game", img: "https://via.placeholder.com/200x120?text=Design+Tool", category: "work", specs: { cpu: "Intel i7-7700", gpu: "NVIDIA GTX 1050", ram: "16 GB", price: 16000 }},
+    { id: 7, title: "Game", img: "https://via.placeholder.com/200x120?text=Chess+Master", category: "play", specs: { cpu: "Intel i3-4150", gpu: "Intel HD Graphics 4400", ram: "4 GB", price: 6000 }},
+    { id: 8, title: "Photo Editor", img: "https://via.placeholder.com/200x120?text=Photo+Editor", category: "work", specs: { cpu: "Intel i5-7500", gpu: "NVIDIA GTX 1050 Ti", ram: "8 GB", price: 14000 }},
+    { id: 9, title: "Space Shooter", img: "https://via.placeholder.com/200x120?text=Space+Shooter", category: "play", specs: { cpu: "Intel i7-8700", gpu: "NVIDIA GTX 1070", ram: "16 GB", price: 22000 }},
+    { id: 10, title: "Note Keeper", img: "https://via.placeholder.com/200x120?text=Note+Keeper", category: "work", specs: { cpu: "Intel i3-7100", gpu: "Intel HD Graphics 630", ram: "4 GB", price: 7500 }},
   ];
 
   const addToCart = (game) => {
@@ -91,7 +30,6 @@ function Home() {
     navigate("/recommend", { state: { cart } });
   };
 
-  // ฟังก์ชันสำหรับสลับการแสดงผลป๊อปอัป
   const toggleCartPopup = () => {
     setIsCartOpen(!isCartOpen);
   };
@@ -104,7 +42,7 @@ function Home() {
       <h1>PIM TO BUY COM</h1>
       <p>Select games to add to your cart.</p>
 
-      {/* ส่วนแสดงเกม (เหมือนเดิม) */}
+      {/* เล่นเกม */}
       <section className="category-section">
         <h2>เล่นเกม</h2>
         <div className="games-list">
@@ -112,6 +50,7 @@ function Home() {
             <div key={game.id} className="game-card">
               <img src={game.img} alt={game.title} className="game-image" />
               <h3>{game.title}</h3>
+
               <button
                 className="add-button"
                 onClick={() => addToCart(game)}
@@ -124,7 +63,7 @@ function Home() {
         </div>
       </section>
 
-      {/* ส่วนแสดงโปรแกรมทำงาน (เหมือนเดิม) */}
+      {/* ทำงาน */}
       <section className="category-section">
         <h2>ทำงาน</h2>
         <div className="games-list">
@@ -132,6 +71,7 @@ function Home() {
             <div key={game.id} className="game-card">
               <img src={game.img} alt={game.title} className="game-image" />
               <h3>{game.title}</h3>
+
               <button
                 className="add-button"
                 onClick={() => addToCart(game)}
@@ -144,32 +84,41 @@ function Home() {
         </div>
       </section>
 
-      {/* ลบส่วน .cart-section เดิมที่อยู่ด้านล่างออก
-        และแทนที่ด้วยไอคอนลอยและป๊อปอัป
-      */}
-
       {/* ไอคอนตะกร้าลอย */}
       <div className="cart-icon" onClick={toggleCartPopup}>
-        🛒 {/* คุณสามารถใช้ไอคอนรูปภาพหรือ FontAwesome แทนได้ */}
-        {cart.length > 0 && (
-          <span className="cart-count">{cart.length}</span>
-        )}
+        🛒
+        {cart.length > 0 && <span className="cart-count">{cart.length}</span>}
       </div>
 
-      {/* ป๊อปอัปตะกร้า (จะแสดงเมื่อ isCartOpen เป็น true) */}
+      {/* Cart Popup */}
       {isCartOpen && (
         <div className="cart-popup">
           <h3>Your Cart ({cart.length} games)</h3>
+
           <ul>
             {cart.length === 0 ? (
-              // เพิ่มสไตล์เล็กน้อยถ้าตะกร้าว่าง
-              <li style={{ background: 'none', color: '#aaa', textAlign: 'center', fontWeight: 'normal' }}>
+              <li style={{ background: "none", color: "#aaa", textAlign: "center" }}>
                 Your cart is empty
               </li>
             ) : (
-              cart.map((item) => <li key={item.id}>{item.title}</li>)
+              cart.map((item) => (
+                <li key={item.id} className="cart-li">
+                  <span>{item.title}</span>
+
+                  {/* ปุ่มลบ */}
+                  <button
+                    className="delete-btn"
+                    onClick={() =>
+                      setCart(cart.filter((g) => g.id !== item.id))
+                    }
+                  >
+                    ❌
+                  </button>
+                </li>
+              ))
             )}
           </ul>
+
           {cart.length > 0 && (
             <button className="confirm-button" onClick={confirmCart}>
               Confirm Purchase

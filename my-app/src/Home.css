@@ -233,6 +233,27 @@ h3 {
   font-weight: 600;
   font-size: 1rem;
 }
+/* ปรับ li ให้วางปุ่มลบขวา */
+.cart-li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ปุ่มลบ */
+.delete-btn {
+  background: transparent;
+  border: none;
+  color: #ff5c70;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.delete-btn:hover {
+  color: red;
+}
+
 
 /* Responsive grids คงเดิม */
 @media (max-width: 1200px) {
