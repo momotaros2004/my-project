@@ -1,23 +1,24 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Home2.css";
 
 function Home2() {
+  const navigate = useNavigate();
+
   const [cpu, setCpu] = useState("");
   const [gpu, setGpu] = useState("");
   const [ram, setRam] = useState("");
   const [storage, setStorage] = useState("");
 
   const handleSubmit = () => {
-    const selected = { cpu, gpu, ram, storage };
-    console.log("SELECTED SPECS:", selected);
-
-    alert(
-      `สเปคที่เลือก:
-CPU: ${cpu}
-GPU: ${gpu}
-RAM: ${ram}
-Storage: ${storage}`
-    );
+    navigate("/recommend2", {
+      state: {
+        cpu,
+        gpu,
+        ram,
+        storage,
+      },
+    });
   };
 
   return (
