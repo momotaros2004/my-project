@@ -11,24 +11,21 @@ body, html, #root {
   width: 100vw;
   height: 100vh;
   padding: 40px 50px;
-  background: rgba(30, 47, 37, 0.95); /* เขียวเข้มแบบโปร่ง */
-  border-radius: 0;
-  box-shadow: none;
+  background: rgba(30, 47, 37, 0.95);
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  color: #f0f0f5;
-  /* เพิ่ม overflow-y auto เพื่อให้เลื่อนได้หากเนื้อหายาว */
-  overflow-y: auto; 
+  overflow-y: auto;
 }
 
+/* Headings */
 h1 {
   text-align: center;
   margin-bottom: 10px;
   font-weight: 700;
   font-size: 2.8rem;
   letter-spacing: 1.5px;
-  color: #66BB6A; /* เขียวสด */
+  color: #66BB6A;
 }
 
 p {
@@ -47,15 +44,17 @@ p {
   margin-bottom: 20px;
   border-left: 6px solid #66BB6A;
   padding-left: 12px;
-  color: #A5D6A7; /* เขียวอ่อน */
+  color: #A5D6A7;
 }
 
+/* Grid layout */
 .games-list {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 20px;
 }
 
+/* Cards */
 .game-card {
   background: #2a2f2a;
   border-radius: 10px;
@@ -85,11 +84,11 @@ p {
 h3 {
   font-size: 1.2rem;
   margin-bottom: 12px;
-  text-transform: capitalize;
-  color: #ffffff;
+  color: #fff;
   text-align: center;
 }
 
+/* Add button */
 .add-button {
   background-color: #66BB6A;
   border: none;
@@ -103,7 +102,7 @@ h3 {
 }
 
 .add-button:hover:not(:disabled) {
-  background-color: #43A047; /* เขียวเข้มขึ้นตอน hover */
+  background-color: #43A047;
 }
 
 .add-button:disabled {
@@ -112,55 +111,7 @@ h3 {
   color: #a0a0b0;
 }
 
-/* .cart-section (ที่อยู่ด้านล่าง) ถูกลบออกจาก JSX แล้ว
-  แต่สไตล์สำหรับ .confirm-button ยังคงถูกใช้ใน .cart-popup 
-*/
-.cart-section {
-  padding: 20px;
-  background: #2a2f2a;
-  border-radius: 10px;
-  box-shadow: inset 0 0 8px rgba(0,0,0,0.8);
-}
-.cart-section h2 {
-  font-weight: 700;
-  color: #66BB6A;
-  margin-bottom: 15px;
-  font-size: 1.8rem;
-}
-.cart-section ul {
-  list-style: none;
-  padding-left: 0;
-  max-height: 220px;
-  overflow-y: auto;
-  margin-bottom: 25px;
-}
-.cart-section li {
-  background: #3b3b66;
-  padding: 10px 15px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  color: #d0d0ff;
-  font-weight: 600;
-}
-
-.confirm-button {
-  background: #43A047;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 16px 30px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  cursor: pointer;
-  width: 100%;
-  transition: background-color 0.3s ease;
-}
-
-.confirm-button:hover {
-  background-color: #2E7D32;
-}
-
-/* ไอคอนตะกร้าลอยมุมล่างขวา */
+/* Floating Cart Icon */
 .cart-icon {
   position: fixed;
   bottom: 25px;
@@ -188,7 +139,7 @@ h3 {
   position: absolute;
   top: 6px;
   right: 6px;
-  background: #FF5252; /* แดงสำหรับตัวนับ */
+  background: #FF5252;
   color: white;
   border-radius: 50%;
   padding: 2px 7px;
@@ -196,6 +147,7 @@ h3 {
   font-weight: 700;
 }
 
+/* Cart Popup */
 .cart-popup {
   position: fixed;
   bottom: 85px;
@@ -225,22 +177,18 @@ h3 {
   margin-bottom: 15px;
 }
 
-.cart-popup li {
+.cart-li {
   background: #3b3b66;
   padding: 8px 12px;
   margin-bottom: 8px;
   border-radius: 8px;
   font-weight: 600;
-  font-size: 1rem;
-}
-/* ปรับ li ให้วางปุ่มลบขวา */
-.cart-li {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-/* ปุ่มลบ */
+/* Delete Button */
 .delete-btn {
   background: transparent;
   border: none;
@@ -254,8 +202,25 @@ h3 {
   color: red;
 }
 
+/* Confirm Button */
+.confirm-button {
+  background: #43A047;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 16px 30px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
 
-/* Responsive grids คงเดิม */
+.confirm-button:hover {
+  background-color: #2E7D32;
+}
+
+/* Responsive */
 @media (max-width: 1200px) {
   .games-list {
     grid-template-columns: repeat(4, 1fr);
@@ -279,3 +244,75 @@ h3 {
     grid-template-columns: 1fr;
   }
 }
+
+/* SAW POPUP */
+.saw-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.saw-popup {
+  width: 380px;
+  background: white;
+  color: black;
+  border-radius: 18px;
+  padding: 25px 30px;
+  position: relative;
+}
+
+.saw-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  border: none;
+  background: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.saw-popup h2 {
+  text-align: center;
+  margin-top: 5px;
+}
+
+.saw-popup p {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.saw-item {
+  margin-bottom: 16px;
+}
+
+.saw-item label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.saw-item select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #aaa;
+}
+
+.saw-next {
+  width: 100%;
+  background: black;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-top: 10px;
+  cursor: pointer;
+}
+

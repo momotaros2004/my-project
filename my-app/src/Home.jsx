@@ -2,10 +2,31 @@ import React, { useState } from "react";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 
+
 function Home() {
   const navigate = useNavigate();
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  // SAW Popup state
+    // SAW Popup State
+  const [isSAWOpen, setIsSAWOpen] = useState(false);
+const [performance, setPerformance] = useState("");
+const [price, setPrice] = useState("");
+const [upgrade, setUpgrade] = useState("");
+const [efficiency, setEfficiency] = useState("");
+
+
+
+  // เปิด popup SAW
+  const openSAW = () => {
+    setIsSAWOpen(true);
+    setIsCartOpen(false);
+  };
+
+  // ไปหน้า Recommend2
+  const goNext = () => {
+    navigate("/recommend2");
+  };
 
   const games = [
     { id: 1, title: "Valorant", img: "/valorant.png", category: "play", specs: { cpu: "Intel i3-4150", gpu: "NVIDIA GeForce GT 730", ram: "4 GB", price: 8000 }},
@@ -24,10 +45,6 @@ function Home() {
     if (!cart.find((item) => item.id === game.id)) {
       setCart([...cart, game]);
     }
-  };
-
-  const confirmCart = () => {
-    navigate("/recommend", { state: { cart } });
   };
 
   const toggleCartPopup = () => {
@@ -105,7 +122,6 @@ function Home() {
                 <li key={item.id} className="cart-li">
                   <span>{item.title}</span>
 
-                  {/* ปุ่มลบ */}
                   <button
                     className="delete-btn"
                     onClick={() =>
@@ -120,12 +136,93 @@ function Home() {
           </ul>
 
           {cart.length > 0 && (
-            <button className="confirm-button" onClick={confirmCart}>
+            <button className="confirm-button" onClick={openSAW}>
               Confirm Purchase
             </button>
           )}
         </div>
       )}
+
+{/* SAW Popup */}
+{isSAWOpen && (
+  <div className="saw-overlay">
+    <div className="saw-popup">
+
+      <button className="saw-close" onClick={() => setIsSAWOpen(false)}>
+        ✕
+      </button>
+
+      <h2>SAW</h2>
+      <p>
+        โปรดใส่ค่าน้ำหนักที่สะท้อนความสำคัญในการเลือกคอมพิวเตอร์ของคุณ
+      </p>
+
+      <div className="saw-item">
+        <label>Performance (ประสิทธิภาพ)</label>
+        <select
+          value={performance}
+          onChange={(e) => setPerformance(e.target.value)}
+        >
+          <option value="">-- เลือกค่า --</option>
+          <option value="0.25">0.25</option>
+          <option value="0.5">0.5</option>
+          <option value="0.4">0.4</option>
+          <option value="0.3">0.3</option>
+          <option value="0.6">0.6</option>
+          <option value="0.7">0.7</option>
+        </select>
+      </div>
+
+      <div className="saw-item">
+        <label>Price (ราคา)</label>
+        <select
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
+        >
+          <option value="">-- เลือกค่า --</option>
+          <option value="0.1">0.1</option>
+          <option value="0.2">0.2</option>
+          <option value="0.3">0.3</option>
+          <option value="0.4">0.4</option>
+        </select>
+      </div>
+
+      <div className="saw-item">
+        <label>Upgrade (อัปเกรดได้)</label>
+        <select
+          value={upgrade}
+          onChange={(e) => setUpgrade(e.target.value)}
+        >
+          <option value="">-- เลือกค่า --</option>
+          <option value="0.1">0.1</option>
+          <option value="0.2">0.2</option>
+          <option value="0.3">0.3</option>
+          <option value="0.4">0.4</option>
+        </select>
+      </div>
+
+      <div className="saw-item">
+        <label>Efficiency (การใช้งานยาวนาน)</label>
+        <select
+          value={efficiency}
+          onChange={(e) => setEfficiency(e.target.value)}
+        >
+          <option value="">-- เลือกค่า --</option>
+          <option value="0.1">0.1</option>
+          <option value="0.2">0.2</option>
+          <option value="0.3">0.3</option>
+          <option value="0.4">0.4</option>
+        </select>
+      </div>
+
+      {/* ปุ่ม Next → Recommend2 */}
+      <button className="saw-next" onClick={goNext}>
+        Next
+      </button>
+    </div>
+  </div>
+)}
+
     </div>
   );
 }
