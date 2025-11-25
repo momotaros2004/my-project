@@ -26,6 +26,7 @@ function SAWResult() {
 
       const calculated = data.map((item) => ({
         ...item,
+        id: item.id,
         total:
           item.performance * weight.performance +
           item.price_score * weight.price +
@@ -41,7 +42,7 @@ function SAWResult() {
   return (
     <div className="saw-page">
 
-      {/* 🔵 ตาราง SAW ด้านบน */}
+      {/* ตาราง SAW */}
       <div className="saw-table-box">
         <h2>SAW Result</h2>
 
@@ -50,9 +51,11 @@ function SAWResult() {
             <tr>
               <th>Criteria</th>
               <th>Weight</th>
-              <th>Com A</th>
-              <th>Com B</th>
-              <th>Com C</th>
+
+              {/* Top 3 ID */}
+              {coms.slice(0, 3).map((c) => (
+                <th key={c.id}>ID {c.id}</th>
+              ))}
             </tr>
           </thead>
 
@@ -61,7 +64,7 @@ function SAWResult() {
               <td>Performance</td>
               <td>{weight.performance}</td>
               {coms.slice(0, 3).map((c, i) => (
-                <td key={"p"+i}>{c.performance}</td>
+                <td key={"p" + i}>{c.performance}</td>
               ))}
             </tr>
 
@@ -69,7 +72,7 @@ function SAWResult() {
               <td>Price Fit</td>
               <td>{weight.price}</td>
               {coms.slice(0, 3).map((c, i) => (
-                <td key={"pr"+i}>{c.price_score}</td>
+                <td key={"pr" + i}>{c.price_score}</td>
               ))}
             </tr>
 
@@ -77,7 +80,7 @@ function SAWResult() {
               <td>Upgrade</td>
               <td>{weight.upgrade}</td>
               {coms.slice(0, 3).map((c, i) => (
-                <td key={"u"+i}>{c.upgrade_score}</td>
+                <td key={"u" + i}>{c.upgrade_score}</td>
               ))}
             </tr>
 
@@ -85,7 +88,7 @@ function SAWResult() {
               <td>Efficiency</td>
               <td>{weight.efficiency}</td>
               {coms.slice(0, 3).map((c, i) => (
-                <td key={"e"+i}>{c.efficiency}</td>
+                <td key={"e" + i}>{c.efficiency}</td>
               ))}
             </tr>
 
@@ -93,20 +96,22 @@ function SAWResult() {
               <td>Total</td>
               <td></td>
               {coms.slice(0, 3).map((c, i) => (
-                <td key={"t"+i}>{Math.round(c.total)}</td>
+                <td key={"t" + i}>{Math.round(c.total)}</td>
               ))}
             </tr>
           </tbody>
         </table>
       </div>
 
-      {/* 🔵 กล่อง Computer ด้านล่าง */}
+      {/* การ์ด 3 อันดับ */}
       <div className="com-grid">
-        {coms.map((c) => (
+        {coms.slice(0, 3).map((c, index) => (
           <div className="com-card" key={c.id}>
-            <img className="com-img" src={`/images/${c.image}`} alt={c.name} />
 
-            <h3>{c.name}</h3>
+            {/* ⭐ แสดงชื่ออันดับ */}
+            <h2 className="rank-title">อันดับ {index + 1}</h2>
+
+            <h3>ID {c.id}</h3>
 
             <p>CPU: {c.cpu}</p>
             <p>GPU: {c.gpu}</p>
@@ -114,12 +119,15 @@ function SAWResult() {
             <p>Storage: {c.storage}</p>
             <p>ราคา: {c.price} บาท</p>
 
-            <p className="total-score">คะแนนรวม: <b>{Math.round(c.total)}</b></p>
+            <p className="total-score">
+              คะแนนรวม: <b>{Math.round(c.total)}</b>
+            </p>
 
             <button className="buy-btn">สั่งซื้อ</button>
           </div>
         ))}
       </div>
+
     </div>
   );
 }
