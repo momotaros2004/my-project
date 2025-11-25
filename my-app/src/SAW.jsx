@@ -38,9 +38,10 @@ function SAW() {
 
     try {
       // ส่งไป Backend คำนวณ SAW
-      const res = await axios.post("http://localhost:5000/saw/calc", {
-        weights: weightData,
-      });
+     const res = await axios.post("http://localhost:5000/api/saw/calc", {
+  weights: weightData,
+});
+
 
       // บันทึกข้อมูลใน localStorage
       localStorage.setItem("saw_results", JSON.stringify(res.data.results));
