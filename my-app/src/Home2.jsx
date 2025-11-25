@@ -9,15 +9,18 @@ function Home2() {
   const [gpu, setGpu] = useState("");
   const [ram, setRam] = useState("");
   const [storage, setStorage] = useState("");
+  const [error, setError] = useState(""); // <-- เพิ่ม state สำหรับข้อความเตือน
 
   const handleSubmit = () => {
+    if (!cpu || !gpu || !ram || !storage) {
+      setError("⚠ กรุณาเลือกข้อมูลให้ครบทุกช่อง");
+      return;
+    }
+
+    setError(""); // เคลียร์ก่อนส่งข้อมูล
+
     navigate("/recommend2", {
-      state: {
-        cpu,
-        gpu,
-        ram,
-        storage,
-      },
+      state: { cpu, gpu, ram, storage },
     });
   };
 
@@ -25,6 +28,9 @@ function Home2() {
     <div className="pc-container">
       <div className="pc-card">
         <h1 className="title">เลือกสเปคคอมที่คุณต้องการ</h1>
+
+        {/* กล่องแสดงข้อความเตือน */}
+        {error && <p className="error-box">{error}</p>}
 
         <div className="select-group">
           <label>เลือก CPU</label>
@@ -82,3 +88,4 @@ function Home2() {
 }
 
 export default Home2;
+
