@@ -1,0 +1,123 @@
+/* กล่องพื้นหลังจาง ๆ */
+.saw-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+/* กล่องเนื้อหา */
+.saw-box {
+  width: 420px;
+  background: #ffffff;
+  padding: 25px 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* หัวข้อ */
+.saw-box h2 {
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #000 !important;
+}
+
+/* คำอธิบาย */
+.saw-box p {
+  font-size: 14px;
+  color: #333 !important;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+/* กล่องเลือก */
+.saw-item {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+/* Label */
+.saw-item label {
+  font-size: 14px;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #222 !important;
+  opacity: 1 !important;
+}
+
+/* Select (Dropdrown) */
+.saw-item select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: #fff !important;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  transition: 0.2s;
+  color: #000 !important;
+  opacity: 1 !important;
+}
+
+.saw-item select:hover {
+  border-color: #333;
+}
+
+/* Option ตัวหนังสือเข้ม */
+option {
+  color: #000 !important;
+  background: #fff !important;
+}
+
+/* ปุ่ม Next */
+.next-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.next-btn:hover {
+  background: #333;
+}
+/* ทำให้ทุก element ในตาราง SAW กลับมาชัด */
+.saw-table, 
+.saw-table * {
+  color: #000 !important;
+  opacity: 1 !important;
+}
+
+/* เผื่อโดน background โปร่ง */
+.saw-table tr, 
+.saw-table td, 
+.saw-table th {
+  background: rgba(255, 255, 255, 1) !important;
+}
+

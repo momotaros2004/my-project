@@ -68,3 +68,14 @@ select option {
   background: rgba(255, 255, 255, 0.4);
   transform: scale(1.03);
 }
+.error-box {
+  background: #ffcccc;
+  color: #b30000;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight: bold;
+  border: 1px solid #ff4d4d;
+}
+

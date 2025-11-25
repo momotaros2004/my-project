@@ -1,0 +1,148 @@
+/* =============== ปลดล็อกการเลื่อนหน้า =============== */
+body, html, #root {
+  height: auto !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+/* =============== โครงหน้า SAW =============== */
+.saw-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+  padding: 60px 0;
+  min-height: 100vh;
+}
+
+/* กล่องฝั่งซ้าย = ตาราง */
+.saw-left {
+  width: 450px;
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 18px;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.25);
+  opacity: 1 !important;
+  color: #000 !important;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* กล่องฝั่งขวา = รายการสินค้า */
+.saw-right {
+  width: 450px;
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 18px;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.25);
+  opacity: 1 !important;
+  color: #000 !important;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* =============== ตาราง =============== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+table th {
+  background: #f3f3f3;
+  font-weight: 700;
+  padding: 12px;
+}
+
+table td {
+  background: #ffffff;
+  padding: 12px;
+  color: #000 !important;
+  border-bottom: 1px solid #ddd;
+}
+
+.total-row td {
+  font-weight: bold;
+  background: #f8f8f8 !important;
+}
+
+/* =============== กล่องสินค้า =============== */
+.com-box {
+  width: 100%;
+  display: flex;
+  padding: 15px;
+  margin-top: 20px;
+  border-radius: 15px;
+  border: 1px solid #ddd;
+  background: #fff !important;
+  color: #000 !important;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+  animation: fadeUp 0.3s ease-in-out;
+}
+
+.com-box img {
+  width: 130px;
+  height: 130px;
+  border-radius: 12px;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.com-box button {
+  height: 40px;
+  padding: 0 25px;
+  margin-left: auto;
+  margin-top: auto;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.com-box button:hover {
+  background: #333;
+}
+
+/* =============== Animation =============== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =============== Mobile Responsive =============== */
+@media (max-width: 900px) {
+  .saw-container {
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+  }
+
+  .saw-left, .saw-right {
+    width: 92%;
+  }
+
+  .com-box {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .com-box img {
+    margin: 0 0 15px 0;
+  }
+
+  .com-box button {
+    margin-top: 10px;
+  }
+}
+
+

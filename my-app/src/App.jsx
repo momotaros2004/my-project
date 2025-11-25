@@ -7,6 +7,8 @@ import BeforeHome from "./beforehome";
 import Home2 from "./Home2";
 import Admin from "./Admin";
 import AdminTable from "./AdminTable";
+import SAW from "./SAW";
+import SAWResult from "./SAWResult";
 
 
 function App() {
@@ -21,6 +23,8 @@ function App() {
         <Route path="/recommend2" element={<Recommend2 />} />
           <Route path="/admin" element={<Admin />} />
         <Route path="/admin/table" element={<AdminTable />} />
+        <Route path="/SAW" element={<SAW />} />
+         <Route path="/SAWResult" element={<SAWResult />} />
       </Routes>
     </BrowserRouter>
   );

@@ -43,7 +43,7 @@ app.post("/api/login", (req, res) => {
 // ======================= PRODUCTS =======================
 
 // ดึงรายการสินค้า
-app.get("/products", (req, res) => {
+app.get("/api/products", (req, res) => {
   const sql = "SELECT * FROM products";
   db.query(sql, (err, results) => {
     if (err) return res.status(500).json({ error: err });
@@ -52,7 +52,7 @@ app.get("/products", (req, res) => {
 });
 
 // เพิ่มสินค้า
-app.post("/products/add", (req, res) => {
+app.post("/api/products/add", (req, res) => {
   const { name, type, detail, stock, price } = req.body;
 
   const sql = `
@@ -67,7 +67,7 @@ app.post("/products/add", (req, res) => {
 });
 
 // ลบสินค้า
-app.delete("/products/delete/:id", (req, res) => {
+app.delete("/api/products/delete/:id", (req, res) => {
   const { id } = req.params;
 
   db.query("DELETE FROM products WHERE id = ?", [id], (err) => {
@@ -78,8 +78,8 @@ app.delete("/products/delete/:id", (req, res) => {
 
 // ======================= COMSET =======================
 
-// ดึง comset
-app.get("/comset", (req, res) => {
+// ดึง comset ทั้งหมด
+app.get("/api/comset", (req, res) => {
   db.query("SELECT * FROM comset", (err, results) => {
     if (err) return res.status(500).json({ error: err });
     res.json(results);
@@ -87,7 +87,7 @@ app.get("/comset", (req, res) => {
 });
 
 // เพิ่ม comset
-app.post("/comset/add", (req, res) => {
+app.post("/api/comset/add", (req, res) => {
   const {
     name,
     cpu,
@@ -135,13 +135,43 @@ app.post("/comset/add", (req, res) => {
 });
 
 // ลบ comset
-app.delete("/comset/delete/:id", (req, res) => {
+app.delete("/api/comset/delete/:id", (req, res) => {
   const { id } = req.params;
 
   db.query("DELETE FROM comset WHERE id = ?", [id], (err) => {
     if (err) return res.status(500).json({ error: err });
-
     res.json({ message: "ลบข้อมูลสำเร็จ!" });
+  });
+});
+
+// ======================= SAW CALCULATE =======================
+app.post("/api/saw/calc", (req, res) => {
+  const { weights } = req.body;
+
+  if (!weights)
+    return res.status(400).json({ error: "Missing weights for SAW" });
+
+  const sql = "SELECT * FROM comset";
+
+  db.query(sql, (err, coms) => {
+    if (err) return res.status(500).json({ error: err });
+
+    const scored = coms.map((c) => {
+      const total =
+        c.performance * weights.performance +
+        c.price_score * weights.price +
+        c.upgrade_score * weights.upgrade +
+        c.efficiency * weights.efficiency;
+
+      return { ...c, totalScore: total };
+    });
+
+    scored.sort((a, b) => b.totalScore - a.totalScore);
+
+    res.json({
+      message: "SAW success",
+      results: scored,
+    });
   });
 });
 
