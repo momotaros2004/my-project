@@ -43,13 +43,19 @@ function Admin() {
     if (!selectedTable) return alert("กรุณาเลือกตารางก่อน");
 
     try {
+      // 🔥 แก้ URL ตรงนี้ให้ตรงกับ Backend
       const url =
         selectedTable === "comset"
-          ? "http://localhost:5000/comset/add"
-          : "http://localhost:5000/products/add";
+          ? "http://localhost:5000/api/comset/add"
+          : "http://localhost:5000/api/products/add";
 
       await axios.post(url, form);
+
       alert("เพิ่มข้อมูลสำเร็จ!");
+
+      // เคลียร์ฟอร์มหลังจากเพิ่มสำเร็จ
+      setForm(selectedTable === "comset" ? comsetFields : productFields);
+
     } catch (err) {
       console.error(err);
       alert("เกิดข้อผิดพลาดในการเพิ่มข้อมูล");
@@ -89,7 +95,7 @@ function Admin() {
                   key={field}
                   name={field}
                   onChange={handleChange}
-                  defaultValue=""
+                  value={form[field]}
                 >
                   <option value="" disabled>
                     เลือกประเภทสินค้า
@@ -110,6 +116,7 @@ function Admin() {
                 key={field}
                 name={field}
                 placeholder={field.toUpperCase()}
+                value={form[field]}
                 onChange={handleChange}
               />
             );
