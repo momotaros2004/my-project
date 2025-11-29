@@ -1,168 +1,108 @@
+/* ============================
+        PAGE BACKGROUND
+   ============================ */
+.login-page {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Prompt', sans-serif;
+}
+
+/* Glow effect */
+.glow-1, .glow-2 {
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  filter: blur(150px);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.glow-1 {
+  background: #66bb6a;
+  top: 10%;
+  left: 65%;
+}
+
+.glow-2 {
+  background: #1de9b6;
+  bottom: 10%;
+  right: 65%;
+}
+
+/* ============================
+          LOGIN BOX
+   ============================ */
 .login-container {
-  width: 300px;
-  margin: 100px auto;
-  padding: 2rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  text-align: center;
-}
-
-.login-form .form-group {
-  margin-bottom: 1rem;
-  text-align: left;
-}
-
-.login-form label {
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-.login-form input {
-  width: 100%;
-  padding: 0.5rem;
-  box-sizing: border-box;
-}
-
-.login-form button {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #4caf50;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.login-form button:hover {
-  background-color: #45a049;
-}
-/* ////////////////////////  BeforeHome.jsx  */
-.before-container {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  color: white;
-}
-
-.before-title {
-  font-size: 2.5rem;
-  margin-bottom: 40px;
-  font-weight: 700;
-  color: #66BB6A;
-}
-
-.before-box-wrapper {
-  display: flex;
-  gap: 40px;
-}
-
-.before-box {
-  width: 220px;
-  height: 260px;
-  border: 3px solid #66BB6A;
-  border-radius: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 2rem;
-  font-weight: 700;
-  color: #66BB6A;
-  background: rgba(0,0,0,0.3);
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.before-box:hover {
-  background: rgba(0,0,0,0.5);
-  transform: translateY(-8px);
-  box-shadow: 0 0 20px #66BB6A;
-}
-
-@media (max-width: 600px) {
-  .before-box-wrapper {
-    flex-direction: column;
-    gap: 25px;
-  }
-  
-  .before-box {
-    width: 200px;
-    height: 220px;
-    font-size: 1.8rem;
-  }
- /*  /////////////////////////////////////////////////////// */
-
-}
-.pc-container {
-  width: 100vw;
-  height: 100vh;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 25px;
-}
-
-.pc-card {
-  width: 95%;
-  max-width: 430px;
+  width: 350px;
+  padding: 2.2rem;
   background: rgba(255, 255, 255, 0.12);
-  border-radius: 20px;
-  padding: 35px 25px;
-  color: white;
-  backdrop-filter: blur(10px);
+  border-radius: 18px;
   border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+  text-align: center;
+  color: white;
 }
 
-.title {
-  text-align: center;
-  font-size: 24px;
+.login-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #66BB6A;
   margin-bottom: 25px;
 }
 
-.select-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 18px;
-}
+/* ============================
+        INPUT & BUTTON
+   ============================ */
 
-.select-group label {
-  margin-bottom: 6px;
-  font-size: 16px;
-}
-
-select {
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  outline: none;
-  background: rgba(255, 255, 255, 0.18);
-  color: white;
-  font-size: 16px;
-  backdrop-filter: blur(6px);
-}
-
-select option {
-  color: black;
-}
-
-.submit-btn {
+/* ช่องกรอกข้อมูล */
+.login-form input {
   width: 100%;
-  padding: 14px;
-  background: rgba(255, 255, 255, 0.25);
-  border: none;
-  border-radius: 15px;
-  font-size: 18px;
-  color: white;
-  cursor: pointer;
-  transition: 0.2s;
+  padding: 12px 14px;
+  margin-bottom: 1rem;
+
+  background: white;
+  color: #333;
+
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  transition: 0.25s;
 }
 
-.submit-btn:hover {
-  background: rgba(255, 255, 255, 0.4);
-  transform: scale(1.03);
+/* focus */
+.login-form input:focus {
+  border-color: #66BB6A;
+  box-shadow: 0 0 8px rgba(102, 187, 106, 0.5);
+  outline: none;
+}
+
+/* ปุ่ม */
+.login-form button {
+  width: 100%;
+  padding: 13px;
+
+  background: linear-gradient(135deg, #43A047, #66BB6A);
+  color: white;
+
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: 0.25s;
+}
+
+.login-form button:hover {
+  background: linear-gradient(135deg, #2e7d32, #57a05a);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(102, 187, 106, 0.5);
 }
