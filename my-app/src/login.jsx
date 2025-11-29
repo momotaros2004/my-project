@@ -1,44 +1,64 @@
-import React, { useState } from "react";
-import "./login.css"; // ใช้ CSS ที่คุณให้มา
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./App.css";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login:", username, password);
+    setMessage("");
+
+    try {
+      // ✅ เรียก API ไป backend
+      const res = await fetch("http://localhost:5000/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMessage(`❌ ${data.error || "Login failed"}`);
+        return;
+      }
+
+      // ✅ บันทึกข้อมูลไว้ใน localStorage
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("username", data.user.username);
+
+      // ✅ ไปหน้า beforehome
+      navigate("/beforehome");
+    } catch (err) {
+      setMessage("⚠️ Cannot connect to server");
+    }
   };
 
   return (
-    <div className="login-page">
-      
-      {/* Glow Effect */}
-      <div className="glow-1"></div>
-      <div className="glow-2"></div>
-
-      {/* Login Box */}
-      <div className="login-container">
-        <h2 className="login-title">Login</h2>
-
-        <form className="login-form" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-
-          <button type="submit">Login</button>
-        </form>
-      </div>
+    <div className="login-container">
+      <h2>Login</h2>
+      <form onSubmit={handleSubmit} className="login-form">
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <button type="submit">Login</button>
+      </form>
+      {message && <p className="message">{message}</p>}
     </div>
   );
 }
