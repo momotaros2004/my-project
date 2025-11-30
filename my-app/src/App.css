@@ -1,168 +1,179 @@
+/* LOGIN PAGE */
+.login-wrapper {
+    width: 100vw !important;
+    height: 100vh !important;
+
+    /* force center */
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    overflow: hidden;
+    position: fixed !important;  /* ปักค้างบน viewport */
+    top: 0;
+    left: 0;
+}
+
+/* fade-in animation */
+.fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+    opacity: 0;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* CENTERED LOGIN CARD */
 .login-container {
-  width: 300px;
-  margin: 100px auto;
-  padding: 2rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  text-align: center;
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    justify-content: center;
+
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    max-width: 900px;
+    width: 100%;
 }
 
-.login-form .form-group {
-  margin-bottom: 1rem;
-  text-align: left;
+/* Login image */
+.login-image img {
+    width: 380px;
+    height: auto;
+    border-radius: 18px;
 }
 
-.login-form label {
-  display: block;
-  margin-bottom: 0.5rem;
+/* Login form */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 300px;
 }
 
+.login-form h2 {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* WHITE INPUT FIX */
 .login-form input {
-  width: 100%;
-  padding: 0.5rem;
-  box-sizing: border-box;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc !important;
+    background: #ffffff !important;
+    font-size: 15px;
+    color: #333 !important;
+    outline: none;
 }
 
+/* LOGIN BUTTON */
 .login-form button {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #4caf50;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
 .login-form button:hover {
-  background-color: #45a049;
-}
-/* ////////////////////////  BeforeHome.jsx  */
-.before-container {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  color: white;
+    background: #005fcc;
 }
 
-.before-title {
-  font-size: 2.5rem;
-  margin-bottom: 40px;
-  font-weight: 700;
-  color: #66BB6A;
+/* MOBILE */
+@media (max-width: 768px) {
+    .login-container {
+        flex-direction: column;
+        text-align: center;
+        padding: 25px;
+    }
+
+    .login-image img {
+        width: 85%;
+    }
+
+    .login-form {
+        width: 100%;
+        max-width: 320px;
+    }
 }
 
-.before-box-wrapper {
-  display: flex;
-  gap: 40px;
+/* PC SELECT PAGE (UNCHANGED AS PROVIDED) */
+.pcb-wrapper {
+    display: flex;
+    height: 100vh;
 }
 
-.before-box {
-  width: 220px;
-  height: 260px;
-  border: 3px solid #66BB6A;
-  border-radius: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 2rem;
-  font-weight: 700;
-  color: #66BB6A;
-  background: rgba(0,0,0,0.3);
-  cursor: pointer;
-  transition: 0.3s;
+.pcb-left, .pcb-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.3s;
+    position: relative;
 }
 
-.before-box:hover {
-  background: rgba(0,0,0,0.5);
-  transform: translateY(-8px);
-  box-shadow: 0 0 20px #66BB6A;
+.pcb-left:hover, .pcb-right:hover {
+    background: rgba(0,0,0,0.05);
 }
 
-@media (max-width: 600px) {
-  .before-box-wrapper {
+.pcb-left img, .pcb-right img {
+    width: 65%;
+}
+
+.pcb-label {
+    position: absolute;
+    bottom: 40px;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .pcb-wrapper {
+        flex-direction: column;
+    }
+
+    .pcb-left img, .pcb-right img {
+        width: 80%;
+    }
+
+    .pcb-label {
+        bottom: 20px;
+        font-size: 18px;
+    }
+}
+
+/* BEFORE HOME PAGE */
+.before-wrapper {
+    display: flex;
     flex-direction: column;
-    gap: 25px;
-  }
-  
-  .before-box {
-    width: 200px;
-    height: 220px;
-    font-size: 1.8rem;
-  }
- /*  /////////////////////////////////////////////////////// */
-
-}
-.pc-container {
-  width: 100vw;
-  height: 100vh;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 25px;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
-.pc-card {
-  width: 95%;
-  max-width: 430px;
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 20px;
-  padding: 35px 25px;
-  color: white;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+.before-wrapper button {
+    padding: 15px 25px;
+    font-size: 18px;
+    border: none;
+    background: #007bff;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
-.title {
-  text-align: center;
-  font-size: 24px;
-  margin-bottom: 25px;
-}
-
-.select-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 18px;
-}
-
-.select-group label {
-  margin-bottom: 6px;
-  font-size: 16px;
-}
-
-select {
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  outline: none;
-  background: rgba(255, 255, 255, 0.18);
-  color: white;
-  font-size: 16px;
-  backdrop-filter: blur(6px);
-}
-
-select option {
-  color: black;
-}
-
-.submit-btn {
-  width: 100%;
-  padding: 14px;
-  background: rgba(255, 255, 255, 0.25);
-  border: none;
-  border-radius: 15px;
-  font-size: 18px;
-  color: white;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.submit-btn:hover {
-  background: rgba(255, 255, 255, 0.4);
-  transform: scale(1.03);
+.before-wrapper button:hover {
+    background: #005fcc;
 }
