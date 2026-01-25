@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./App.css";
+import "./login.scss";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -13,7 +14,6 @@ function Login() {
     setMessage("");
 
     try {
-      // ✅ เรียก API ไป backend
       const res = await fetch("http://localhost:5000/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -27,11 +27,9 @@ function Login() {
         return;
       }
 
-      // ✅ บันทึกข้อมูลไว้ใน localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("username", data.user.username);
 
-      // ✅ ไปหน้า beforehome
       navigate("/beforehome");
     } catch (err) {
       setMessage("⚠️ Cannot connect to server");
@@ -40,8 +38,7 @@ function Login() {
 
   return (
     <div className="login-container">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit} className="login-form">
+      <form className="login" onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Username"
@@ -49,6 +46,7 @@ function Login() {
           onChange={(e) => setUsername(e.target.value)}
           required
         />
+
         <input
           type="password"
           placeholder="Password"
@@ -56,9 +54,14 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+
         <button type="submit">Login</button>
       </form>
-      {message && <p className="message">{message}</p>}
+
+  
+
+     
+      
     </div>
   );
 }
