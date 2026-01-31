@@ -174,6 +174,36 @@ app.post("/api/saw/calc", (req, res) => {
     });
   });
 });
+// ======================= CHECK COMSET =======================
+
+app.post("/api/check-com", (req, res) => {
+  const { cpu, gpu, ram, storage } = req.body;
+
+  const sql = `
+    SELECT * FROM comset
+    WHERE cpu=? AND gpu=? AND ram=? AND storage=?
+    LIMIT 1
+  `;
+
+  db.query(sql, [cpu, gpu, ram, storage], (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({ error: err });
+    }
+
+    if (result.length > 0) {
+      res.json({
+        found: true,
+        data: result[0],
+      });
+    } else {
+      res.json({
+        found: false,
+      });
+    }
+  });
+});
+
 
 // ======================= SERVER =======================
 const PORT = process.env.PORT || 5000;

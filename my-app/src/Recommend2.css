@@ -1,49 +1,68 @@
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* container */
+
 .rec-container {
-  height: 100vh;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
 }
+
+/* card */
 
 .rec-card {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  padding: 30px;
-  width: 380px;
-  border-radius: 18px;
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
-
-.title {
+  width: 400px;
+  padding: 35px 30px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  color: white;
   text-align: center;
-  margin-bottom: 25px;
 }
 
-.summary-box {
-  background: rgba(255, 255, 255, 0.15);
-  padding: 20px;
-  border-radius: 12px;
+/* title */
+
+.rec-card h1 {
+  color: #00ff9c;
   margin-bottom: 20px;
 }
 
-.summary-box p {
+/* spec text */
+
+.rec-card p {
+  background: rgba(255, 255, 255, 0.12);
+  padding: 10px;
+  border-radius: 10px;
   margin: 10px 0;
-  font-size: 18px;
+  font-size: 15px;
 }
 
-.back-btn {
+/* button */
+
+.rec-card button {
+  margin-top: 25px;
   width: 100%;
   padding: 12px;
+  border-radius: 12px;
   border: none;
-  background: #ff5e62;
-  border-radius: 10px;
-  color: white;
-  font-size: 16px;
   cursor: pointer;
+  background: linear-gradient(135deg, #00ff99, #00ccff);
+  font-weight: bold;
+  transition: 0.2s;
 }
 
-.back-btn:hover {
-  background: #ff3c41;
+.rec-card button:hover {
+  transform: scale(1.03);
+}
+
+/* no data page */
+
+.rec-container h2 {
+  color: #ff6b6b;
 }
