@@ -203,6 +203,53 @@ app.post("/api/check-com", (req, res) => {
     }
   });
 });
+app.post("/api/saw/filter", (req, res) => {
+
+const { cart, weights } = req.body;
+
+// ================= รวม RAM ขั้นต่ำ =================
+let minRam = 0;
+
+cart.forEach(g => {
+  minRam = Math.max(minRam, parseInt(g.specs.ram));
+});
+
+// ================= query comset =================
+
+const sql = `
+SELECT *
+FROM comset
+WHERE CAST(REPLACE(ram,' GB','') AS UNSIGNED) >= ?
+`;
+
+db.query(sql, [minRam], (err, rows) => {
+
+  if(err){
+    console.log(err);
+    return res.status(500).json(err);
+  }
+
+  // ================= SAW =================
+
+  const result = rows.map(c => ({
+
+    ...c,
+
+    total:
+      c.performance * weights.performance +
+      c.price_score * weights.price +
+      c.upgrade_score * weights.upgrade +
+      c.efficiency * weights.efficiency
+
+  }));
+
+  result.sort((a,b)=>b.total-a.total);
+
+  res.json(result);
+
+});
+
+});
 
 
 // ======================= SERVER =======================
