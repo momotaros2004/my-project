@@ -13,60 +13,103 @@ function SAW() {
   const [upgrade, setUpgrade] = useState("");
   const [efficiency, setEfficiency] = useState("");
 
-  const handleNext = async () => {
+  const p = Number(performance || 0);
+  const pr = Number(price || 0);
+  const u = Number(upgrade || 0);
+  const e = Number(efficiency || 0);
 
+  const total = +(p + pr + u + e).toFixed(2);
+
+  const handleNext = async () => {
     if (!performance || !price || !upgrade || !efficiency) {
-      alert("เลือก weight ให้ครบ");
+      alert("⚠️ กรุณาเลือก weight ให้ครบ");
+      return;
+    }
+
+    if (total !== 1) {
+      alert(`❌ ผลรวม weight ต้องเท่ากับ 1\nตอนนี้ได้ = ${total}`);
       return;
     }
 
     const weightData = {
-      performance:Number(performance),
-      price:Number(price),
-      upgrade:Number(upgrade),
-      efficiency:Number(efficiency)
+      performance: p,
+      price: pr,
+      upgrade: u,
+      efficiency: e,
     };
 
     try {
-
-      const res = await axios.post("http://localhost:5000/api/saw/filter",{
+      const res = await axios.post("http://localhost:5000/api/saw/filter", {
         cart,
-        weights: weightData
+        weights: weightData,
       });
 
-      localStorage.setItem("saw_results",JSON.stringify(res.data));
-
+      localStorage.setItem("saw_results", JSON.stringify(res.data));
       navigate("/sawresult");
-
-    } catch(err){
+    } catch (err) {
       console.log(err);
-      alert("error");
+      alert("Server error");
     }
   };
 
   return (
     <div className="saw-container">
       <div className="saw-box">
+        <h2>SAW WEIGHT</h2>
 
-        <h2>SAW</h2>
+        <select onChange={(e) => setPerformance(e.target.value)}>
+          <option value="">Performance</option>
+          <option value="0.1">0.1</option>
+          <option value="0.2">0.2</option>
+          <option value="0.3">0.3</option>
+          <option value="0.4">0.4</option>
+        </select>
 
-        {["performance","price","upgrade","efficiency"].map((k,i)=>(
-          <select key={i} onChange={(e)=>{
-            if(k==="performance")setPerformance(e.target.value);
-            if(k==="price")setPrice(e.target.value);
-            if(k==="upgrade")setUpgrade(e.target.value);
-            if(k==="efficiency")setEfficiency(e.target.value);
-          }}>
-            <option value="">เลือก {k}</option>
-            <option value="0.1">0.1</option>
-            <option value="0.2">0.2</option>
-            <option value="0.3">0.3</option>
-            <option value="0.4">0.4</option>
-          </select>
-        ))}
+        <select onChange={(e) => setPrice(e.target.value)}>
+          <option value="">Price</option>
+          <option value="0.1">0.1</option>
+          <option value="0.2">0.2</option>
+          <option value="0.3">0.3</option>
+          <option value="0.4">0.4</option>
+        </select>
 
-        <button onClick={handleNext}>Next</button>
+        <select onChange={(e) => setUpgrade(e.target.value)}>
+          <option value="">Upgrade</option>
+          <option value="0.1">0.1</option>
+          <option value="0.2">0.2</option>
+          <option value="0.3">0.3</option>
+          <option value="0.4">0.4</option>
+        </select>
 
+        <select onChange={(e) => setEfficiency(e.target.value)}>
+          <option value="">Efficiency</option>
+          <option value="0.1">0.1</option>
+          <option value="0.2">0.2</option>
+          <option value="0.3">0.3</option>
+          <option value="0.4">0.4</option>
+        </select>
+
+        {/* TOTAL */}
+        <p
+          style={{
+            color: total === 1 ? "#00ffcc" : "red",
+            marginTop: "10px",
+            fontWeight: "bold",
+          }}
+        >
+          Total Weight : {total}
+        </p>
+
+        <button
+          onClick={handleNext}
+          disabled={total !== 1}
+          style={{
+            opacity: total === 1 ? 1 : 0.4,
+            cursor: total === 1 ? "pointer" : "not-allowed",
+          }}
+        >
+          NEXT
+        </button>
       </div>
     </div>
   );
