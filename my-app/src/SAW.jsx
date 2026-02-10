@@ -1,123 +1,114 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./SAW.css";
 
 function SAW() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const cart = location.state?.cart || [];
 
   const [performance, setPerformance] = useState("");
   const [price, setPrice] = useState("");
   const [upgrade, setUpgrade] = useState("");
   const [efficiency, setEfficiency] = useState("");
 
-  // ================== Submit SAW ==================
+  const p = Number(performance || 0);
+  const pr = Number(price || 0);
+  const u = Number(upgrade || 0);
+  const e = Number(efficiency || 0);
+
+  const total = +(p + pr + u + e).toFixed(2);
+
   const handleNext = async () => {
     if (!performance || !price || !upgrade || !efficiency) {
-      alert("⚠️ กรุณาเลือกน้ำหนักให้ครบทุกข้อ");
+      alert("⚠️ กรุณาเลือก weight ให้ครบ");
       return;
     }
 
-    const total =
-      Number(performance) +
-      Number(price) +
-      Number(upgrade) +
-      Number(efficiency);
-
-    if (total > 1) {
-      alert("⚠️ ค่าน้ำหนักรวมต้องไม่เกิน 1");
+    if (total !== 1) {
+      alert(`❌ ผลรวม weight ต้องเท่ากับ 1\nตอนนี้ได้ = ${total}`);
       return;
     }
 
     const weightData = {
-      performance: Number(performance),
-      price: Number(price),
-      upgrade: Number(upgrade),
-      efficiency: Number(efficiency),
+      performance: p,
+      price: pr,
+      upgrade: u,
+      efficiency: e,
     };
 
     try {
-      // ส่งไป Backend คำนวณ SAW
-     const res = await axios.post("http://localhost:5000/api/saw/calc", {
-  weights: weightData,
-});
+      const res = await axios.post("http://localhost:5000/api/saw/filter", {
+        cart,
+        weights: weightData,
+      });
 
-
-      // บันทึกข้อมูลใน localStorage
-      localStorage.setItem("saw_results", JSON.stringify(res.data.results));
-      localStorage.setItem("saw_weights", JSON.stringify(weightData));
-
-      // ไปหน้าผลลัพธ์
+      localStorage.setItem("saw_results", JSON.stringify(res.data));
       navigate("/sawresult");
-
     } catch (err) {
-      console.error(err);
-      alert("เกิดข้อผิดพลาดในการคำนวณ SAW");
+      console.log(err);
+      alert("Server error");
     }
   };
 
   return (
     <div className="saw-container">
       <div className="saw-box">
-        <h2>SAW</h2>
-        <p>โปรดใส่ค่าน้ำหนักที่สะท้อนความสำคัญในการเลือกคอมพิวเตอร์ของคุณ</p>
+        <h2>SAW WEIGHT</h2>
 
-        {/* Performance */}
-        <div className="saw-item">
-          <label>Performance (ประสิทธิภาพ)</label>
-          <select value={performance} onChange={(e) => setPerformance(e.target.value)}>
-            <option value="">-- เลือกค่า --</option>
-            <option value="0.25">0.25</option>
-            <option value="0.3">0.3</option>
-            <option value="0.4">0.4</option>
-            <option value="0.5">0.5</option>
-            <option value="0.6">0.6</option>
-            <option value="0.7">0.7</option>
-          </select>
-        </div>
+        <select onChange={(e) => setPerformance(e.target.value)}>
+          <option value="">Performance</option>
+          <option value="0.1">0.1</option>
+          <option value="0.2">0.2</option>
+          <option value="0.3">0.3</option>
+          <option value="0.4">0.4</option>
+        </select>
 
-        {/* Price */}
-        <div className="saw-item">
-          <label>Price (ราคา)</label>
-          <select value={price} onChange={(e) => setPrice(e.target.value)}>
-            <option value="">-- เลือกค่า --</option>
-            <option value="0.1">0.1</option>
-            <option value="0.2">0.2</option>
-            <option value="0.25">0.25</option>
-            <option value="0.3">0.3</option>
-            <option value="0.35">0.35</option>
-            <option value="0.4">0.4</option>
-          </select>
-        </div>
+        <select onChange={(e) => setPrice(e.target.value)}>
+          <option value="">Price</option>
+          <option value="0.1">0.1</option>
+          <option value="0.2">0.2</option>
+          <option value="0.3">0.3</option>
+          <option value="0.4">0.4</option>
+        </select>
 
-        {/* Upgrade */}
-        <div className="saw-item">
-          <label>Upgrade (อัปเกรดได้)</label>
-          <select value={upgrade} onChange={(e) => setUpgrade(e.target.value)}>
-            <option value="">-- เลือกค่า --</option>
-            <option value="0.1">0.1</option>
-            <option value="0.2">0.2</option>
-            <option value="0.25">0.25</option>
-            <option value="0.3">0.3</option>
-            <option value="0.35">0.35</option>
-            <option value="0.4">0.4</option>
-          </select>
-        </div>
+        <select onChange={(e) => setUpgrade(e.target.value)}>
+          <option value="">Upgrade</option>
+          <option value="0.1">0.1</option>
+          <option value="0.2">0.2</option>
+          <option value="0.3">0.3</option>
+          <option value="0.4">0.4</option>
+        </select>
 
-        {/* Efficiency */}
-        <div className="saw-item">
-          <label>Efficiency (ประหยัดพลังงาน)</label>
-          <select value={efficiency} onChange={(e) => setEfficiency(e.target.value)}>
-            <option value="">-- เลือกค่า --</option>
-            <option value="0.1">0.1</option>
-            <option value="0.125">0.125</option>
-            <option value="0.2">0.2</option>
-            <option value="0.25">0.25</option>
-          </select>
-        </div>
+        <select onChange={(e) => setEfficiency(e.target.value)}>
+          <option value="">Efficiency</option>
+          <option value="0.1">0.1</option>
+          <option value="0.2">0.2</option>
+          <option value="0.3">0.3</option>
+          <option value="0.4">0.4</option>
+        </select>
 
-        <button className="next-btn" onClick={handleNext}>
-          Next
+        {/* TOTAL */}
+        <p
+          style={{
+            color: total === 1 ? "#00ffcc" : "red",
+            marginTop: "10px",
+            fontWeight: "bold",
+          }}
+        >
+          Total Weight : {total}
+        </p>
+
+        <button
+          onClick={handleNext}
+          disabled={total !== 1}
+          style={{
+            opacity: total === 1 ? 1 : 0.4,
+            cursor: total === 1 ? "pointer" : "not-allowed",
+          }}
+        >
+          NEXT
         </button>
       </div>
     </div>

@@ -1,133 +1,96 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import "./SAWResult.css";
 
+const criteria = [
+  { key: "performance", label: "Performance" },
+  { key: "price_score", label: "Price Fit" },
+  { key: "upgrade_score", label: "Upgradeability" },
+  { key: "efficiency", label: "Efficiency / Noise" },
+];
+
+const tierWeights = {
+  low: { performance: 0.35, price_score: 0.45, upgrade_score: 0.15, efficiency: 0.05 },
+  mid: { performance: 0.45, price_score: 0.25, upgrade_score: 0.2, efficiency: 0.1 },
+  high: { performance: 0.55, price_score: 0.1, upgrade_score: 0.2, efficiency: 0.15 },
+};
+
 function SAWResult() {
-  const navigate = useNavigate();
-
-  const weight = JSON.parse(localStorage.getItem("saw_weights"));
-
-  if (!weight) {
-    return (
-      <div className="saw-result">
-        <h2>ไม่พบข้อมูล Weight</h2>
-        <p>คุณยังไม่ได้ทำการประเมินคะแนน SAW</p>
-        <button onClick={() => navigate(-1)}>กลับ</button>
-      </div>
-    );
-  }
-
   const [coms, setComs] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/comset").then((res) => {
-      const data = res.data;
-
-      const calculated = data.map((item) => ({
-        ...item,
-        id: item.id,
-        total:
-          item.performance * weight.performance +
-          item.price_score * weight.price +
-          item.upgrade_score * weight.upgrade +
-          item.efficiency * weight.efficiency,
-      }));
-
-      calculated.sort((a, b) => b.total - a.total);
-      setComs(calculated);
-    });
+    setComs(JSON.parse(localStorage.getItem("saw_results")) || []);
   }, []);
 
+  const top3 = coms.slice(0, 3);
+
   return (
-    <div className="saw-page">
+    <div className="result-container">
+      <h2>SAW Calculation</h2>
 
-      {/* ตาราง SAW */}
-      <div className="saw-table-box">
-        <h2>SAW Result</h2>
+      <table className="saw-table">
+        <thead>
+          <tr>
+            <th>Criteria</th>
+            <th>อันดับ 1</th>
+            <th>อันดับ 2</th>
+            <th>อันดับ 3</th>
+          </tr>
+        </thead>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Criteria</th>
-              <th>Weight</th>
+        <tbody>
+          {criteria.map((c) => {
+            const w =
+              c.key === "performance"
+                ? tierWeights.high
+                : c.key === "price_score"
+                ? tierWeights.low
+                : tierWeights.mid;
 
-              {/* Top 3 ID */}
-              {coms.slice(0, 3).map((c) => (
-                <th key={c.id}>ID {c.id}</th>
-              ))}
-            </tr>
-          </thead>
+            return (
+              <tr key={c.key}>
+                <td>{c.label}</td>
 
-          <tbody>
-            <tr>
-              <td>Performance</td>
-              <td>{weight.performance}</td>
-              {coms.slice(0, 3).map((c, i) => (
-                <td key={"p" + i}>{c.performance}</td>
-              ))}
-            </tr>
+                {top3.map((pc) => (
+                  <td key={pc.id}>
+                    {((pc[c.key] || 0) * w[c.key]).toFixed(2)}
+                  </td>
+                ))}
+              </tr>
+            );
+          })}
 
-            <tr>
-              <td>Price Fit</td>
-              <td>{weight.price}</td>
-              {coms.slice(0, 3).map((c, i) => (
-                <td key={"pr" + i}>{c.price_score}</td>
-              ))}
-            </tr>
+          <tr className="total-row">
+            <td>TOTAL</td>
+            {top3.map((pc) => (
+              <td key={pc.id}>{Number(pc.total || 0).toFixed(2)}</td>
+            ))}
+          </tr>
+        </tbody>
+      </table>
 
-            <tr>
-              <td>Upgrade</td>
-              <td>{weight.upgrade}</td>
-              {coms.slice(0, 3).map((c, i) => (
-                <td key={"u" + i}>{c.upgrade_score}</td>
-              ))}
-            </tr>
+      <h2>Top 3 Result</h2>
 
-            <tr>
-              <td>Efficiency</td>
-              <td>{weight.efficiency}</td>
-              {coms.slice(0, 3).map((c, i) => (
-                <td key={"e" + i}>{c.efficiency}</td>
-              ))}
-            </tr>
+      <div className="result-grid">
+        {top3.map((c, i) => (
+          <div className={`result-card rank-${i + 1}`} key={c.id}>
+            <h3>อันดับ {i + 1}</h3>
 
-            <tr className="total-row">
-              <td>Total</td>
-              <td></td>
-              {coms.slice(0, 3).map((c, i) => (
-                <td key={"t" + i}>{Math.round(c.total)}</td>
-              ))}
-            </tr>
-          </tbody>
-        </table>
-      </div>
+            {/* ใช้ ID */}
+            <h4>MODEL #{c.id}</h4>
 
-      {/* การ์ด 3 อันดับ */}
-      <div className="com-grid">
-        {coms.slice(0, 3).map((c, index) => (
-          <div className="com-card" key={c.id}>
+            <p>CPU {c.cpu}</p>
+            <p>GPU {c.gpu}</p>
+            <p>RAM {c.ram}</p>
 
-            {/* ⭐ แสดงชื่ออันดับ */}
-            <h2 className="rank-title">อันดับ {index + 1}</h2>
+            {/* ราคา */}
+            <p>💰 {Number(c.price || 0).toLocaleString()} บาท</p>
 
-            <h3>ID {c.id}</h3>
-
-            <p>CPU: {c.cpu}</p>
-            <p>GPU: {c.gpu}</p>
-            <p>RAM: {c.ram}</p>
-            <p>Storage: {c.storage}</p>
-            <p>ราคา: {c.price} บาท</p>
-
-            <p className="total-score">
-              คะแนนรวม: <b>{Math.round(c.total)}</b>
-            </p>
+            <b>{Number(c.total || 0).toFixed(2)}</b>
 
             <button className="buy-btn">สั่งซื้อ</button>
           </div>
         ))}
       </div>
-
     </div>
   );
 }

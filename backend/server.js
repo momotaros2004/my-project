@@ -174,6 +174,83 @@ app.post("/api/saw/calc", (req, res) => {
     });
   });
 });
+// ======================= CHECK COMSET =======================
+
+app.post("/api/check-com", (req, res) => {
+  const { cpu, gpu, ram, storage } = req.body;
+
+  const sql = `
+    SELECT * FROM comset
+    WHERE cpu=? AND gpu=? AND ram=? AND storage=?
+    LIMIT 1
+  `;
+
+  db.query(sql, [cpu, gpu, ram, storage], (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({ error: err });
+    }
+
+    if (result.length > 0) {
+      res.json({
+        found: true,
+        data: result[0],
+      });
+    } else {
+      res.json({
+        found: false,
+      });
+    }
+  });
+});
+app.post("/api/saw/filter", (req, res) => {
+
+const { cart, weights } = req.body;
+
+// ================= รวม RAM ขั้นต่ำ =================
+let minRam = 0;
+
+cart.forEach(g => {
+  minRam = Math.max(minRam, parseInt(g.specs.ram));
+});
+
+// ================= query comset =================
+
+const sql = `
+SELECT *
+FROM comset
+WHERE CAST(REPLACE(ram,' GB','') AS UNSIGNED) >= ?
+`;
+
+db.query(sql, [minRam], (err, rows) => {
+
+  if(err){
+    console.log(err);
+    return res.status(500).json(err);
+  }
+
+  // ================= SAW =================
+
+  const result = rows.map(c => ({
+
+    ...c,
+
+    total:
+      c.performance * weights.performance +
+      c.price_score * weights.price +
+      c.upgrade_score * weights.upgrade +
+      c.efficiency * weights.efficiency
+
+  }));
+
+  result.sort((a,b)=>b.total-a.total);
+
+  res.json(result);
+
+});
+
+});
+
 
 // ======================= SERVER =======================
 const PORT = process.env.PORT || 5000;

@@ -5,30 +5,32 @@ export default function Recommend2() {
   const { state } = useLocation();
   const navigate = useNavigate();
 
-  if (!state) {
+  if (!state || !state.com) {
     return (
       <div className="rec-container">
-        <h2>ไม่มีข้อมูลที่เลือกมา</h2>
-        <button onClick={() => navigate("/home2")}>กลับไปเลือกใหม่</button>
+        <h2>❌ ไม่มีข้อมูล</h2>
+        <button onClick={() => navigate("/home2")}>กลับ</button>
       </div>
     );
   }
 
-  const { cpu, gpu, ram, storage } = state;
+  const { com } = state;
 
   return (
     <div className="rec-container">
       <div className="rec-card">
-        <h1 className="title">✔ สรุปสเปคที่คุณเลือก</h1>
 
-        <div className="summary-box">
-          <p><strong>CPU:</strong> {cpu}</p>
-          <p><strong>GPU:</strong> {gpu}</p>
-          <p><strong>RAM:</strong> {ram}</p>
-          <p><strong>Storage:</strong> {storage}</p>
-        </div>
+        <h1>✅ สำเร็จ</h1>
 
-        <button className="back-btn" onClick={() => navigate("/home2")}>
+        <p>ชื่อเครื่อง: {com.name}</p>
+        <p>CPU: {com.cpu}</p>
+        <p>GPU: {com.gpu}</p>
+        <p>RAM: {com.ram}</p>
+        <p>Storage: {com.storage}</p>
+        <p>ราคา: {com.price} บาท</p>
+        <p>Tier: {com.tier}</p>
+
+        <button onClick={() => navigate("/home2")}>
           🔙 เลือกใหม่
         </button>
       </div>

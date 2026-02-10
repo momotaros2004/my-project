@@ -1,244 +1,188 @@
-/* พื้นหลังเต็มจอ */
-body, html, #root {
-  height: 100%;
-  margin: 0;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #f0f0f5;
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
 }
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #050b15, #000);
+}
+
+/* MAIN */
 
 .home-container {
-  width: 100vw;
-  height: 100vh;
-  padding: 40px 50px;
-  background: rgba(30, 47, 37, 0.95);
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  overflow-y: auto;
+  min-height: 100vh;
+  padding: 40px;
+  color: white;
+  text-align: center;
 }
 
-/* Headings */
-h1 {
-  text-align: center;
-  margin-bottom: 10px;
-  font-weight: 700;
-  font-size: 2.8rem;
-  letter-spacing: 1.5px;
-  color: #66BB6A;
+.home-container h1 {
+  font-size: 40px;
+  color: #00eaff;
+  letter-spacing: 4px;
+  text-shadow: 0 0 20px #00eaff;
 }
 
-p {
-  text-align: center;
-  margin-bottom: 40px;
-  font-size: 1.2rem;
-  color: #c0c0d0;
+.home-container p {
+  color: #aaa;
 }
+
+/* CATEGORY */
 
 .category-section {
-  margin-bottom: 50px;
+  margin-top: 50px;
 }
 
 .category-section h2 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-  border-left: 6px solid #66BB6A;
-  padding-left: 12px;
-  color: #A5D6A7;
+  color: #00ffd5;
+  letter-spacing: 2px;
 }
 
-/* Grid layout */
+/* GAME GRID */
+
 .games-list {
+  margin-top: 25px;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 25px;
 }
 
-/* Cards */
+/* GAME CARD */
+
 .game-card {
-  background: #2a2f2a;
-  border-radius: 10px;
+  background: rgba(255,255,255,.05);
+  border-radius: 15px;
   padding: 15px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0,255,255,.3);
+  transition: .3s;
 }
 
 .game-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 8px 25px #66BB6A;
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 0 25px #00ffff;
 }
 
 .game-image {
   width: 100%;
   height: 120px;
   object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 12px;
-  user-select: none;
+  border-radius: 10px;
 }
 
-h3 {
-  font-size: 1.2rem;
-  margin-bottom: 12px;
-  color: #fff;
-  text-align: center;
+.game-card h3 {
+  margin: 10px 0;
 }
 
-/* Add button */
+/* ADD BUTTON */
+
 .add-button {
-  background-color: #66BB6A;
+  margin-top: 10px;
+  padding: 8px 20px;
+  border-radius: 20px;
   border: none;
-  border-radius: 6px;
-  padding: 10px 0;
-  width: 100%;
-  font-weight: 600;
-  font-size: 1rem;
-  color: #1e1e2f;
-  transition: background-color 0.3s ease;
-}
-
-.add-button:hover:not(:disabled) {
-  background-color: #43A047;
+  background: linear-gradient(135deg,#00eaff,#00ff88);
+  cursor: pointer;
+  font-weight: bold;
 }
 
 .add-button:disabled {
-  background-color: #555a70;
+  background: #333;
+  color: #777;
   cursor: not-allowed;
-  color: #a0a0b0;
 }
 
-/* Floating Cart Icon */
+/* FLOAT CART */
+
 .cart-icon {
   position: fixed;
   bottom: 25px;
   right: 25px;
-  background-color: #66BB6A;
-  color: #1e1e2f;
-  width: 50px;
-  height: 50px;
-  font-size: 28px;
+  background: #00eaff;
+  color: black;
+  padding: 15px;
   border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  font-size: 22px;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
-  user-select: none;
-  z-index: 1000;
-}
-
-.cart-icon:hover {
-  background-color: #43A047;
+  box-shadow: 0 0 25px #00eaff;
 }
 
 .cart-count {
   position: absolute;
-  top: 6px;
-  right: 6px;
-  background: #FF5252;
+  top: -5px;
+  right: -5px;
+  background: red;
   color: white;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  padding: 2px 7px;
   font-size: 12px;
-  font-weight: 700;
-}
-
-/* Cart Popup */
-.cart-popup {
-  position: fixed;
-  bottom: 85px;
-  right: 25px;
-  width: 280px;
-  max-height: 350px;
-  background: #2a2f2a;
-  border-radius: 12px;
-  padding: 15px 20px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.7);
-  color: #f0f0f5;
-  overflow-y: auto;
-  z-index: 1001;
-}
-
-.cart-popup h3 {
-  margin-top: 0;
-  margin-bottom: 12px;
-  color: #66BB6A;
-  font-weight: 700;
-  font-size: 1.3rem;
-}
-
-.cart-popup ul {
-  list-style: none;
-  padding-left: 0;
-  margin-bottom: 15px;
-}
-
-.cart-li {
-  background: #3b3b66;
-  padding: 8px 12px;
-  margin-bottom: 8px;
-  border-radius: 8px;
-  font-weight: 600;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
-.delete-btn {
-  background: transparent;
-  border: none;
-  color: #ff5c70;
-  font-size: 20px;
-  cursor: pointer;
-  transition: 0.2s;
+/* CART POPUP */
+
+.cart-popup {
+  position: fixed;
+  right: 30px;
+  bottom: 90px;
+  width: 300px;
+  background: rgba(0,0,0,.9);
+  border-radius: 15px;
+  padding: 20px;
+  border: 1px solid #00ffff;
+  box-shadow: 0 0 30px #00ffff;
+  animation: popup .3s ease;
 }
 
-.delete-btn:hover {
-  color: red;
+@keyframes popup {
+  from { transform: scale(.7); opacity:0 }
+  to { transform: scale(1); opacity:1 }
 }
+
+.cart-popup h3 {
+  color: #00ffff;
+}
+
+/* CART LIST */
+
+.cart-popup ul {
+  list-style: none;
+  padding: 0;
+}
+
+.cart-li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255,255,255,.05);
+  margin-top: 10px;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+/* DELETE */
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* CONFIRM */
 
 .confirm-button {
-  background: #43A047;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 16px 30px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  cursor: pointer;
   width: 100%;
-  transition: background-color 0.3s ease;
-}
-
-.confirm-button:hover {
-  background-color: #2E7D32;
-}
-
-/* Responsive */
-@media (max-width: 1200px) {
-  .games-list {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-@media (max-width: 900px) {
-  .games-list {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 600px) {
-  .games-list {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 400px) {
-  .games-list {
-    grid-template-columns: 1fr;
-  }
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 25px;
+  border: none;
+  background: linear-gradient(135deg,#00ff88,#00eaff);
+  font-weight: bold;
+  cursor: pointer;
 }
