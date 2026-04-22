@@ -1,15 +1,35 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import "./BeforeHome.css";
+
 function BeforeHome() {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    // ล้างข้อมูล login (ถ้ามี)
-    localStorage.clear();
+  const handleLogout = async () => {
+    const result = await Swal.fire({
+      title: "ออกจากระบบ?",
+      text: "คุณต้องการ Logout ใช่หรือไม่",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Logout",
+      cancelButtonText: "ยกเลิก",
+    });
 
-    // กลับหน้า login
-    navigate("/login");
+    if (result.isConfirmed) {
+      localStorage.clear();
+
+      await Swal.fire({
+        icon: "success",
+        title: "ออกจากระบบแล้ว",
+        timer: 1200,
+        showConfirmButton: false,
+      });
+
+      navigate("/login");
+    }
   };
 
   return (

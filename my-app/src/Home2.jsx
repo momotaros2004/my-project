@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home2.css";
 
@@ -10,17 +10,36 @@ function Home2() {
   const [ram, setRam] = useState("");
   const [storage, setStorage] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // 🔐 protect page
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const handleSubmit = async () => {
+    setError("");
+
     if (!cpu || !gpu || !ram || !storage) {
       setError("⚠ กรุณาเลือกข้อมูลให้ครบ");
       return;
     }
 
+    const token = localStorage.getItem("token");
+
+    setLoading(true);
+
     try {
       const res = await fetch("http://localhost:5000/api/check-com", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // 🔐 ADD
+        },
         body: JSON.stringify({ cpu, gpu, ram, storage }),
       });
 
@@ -36,8 +55,10 @@ function Home2() {
       } else {
         setError("❌ ของหมด / ไม่มีสเปคนี้ในระบบ");
       }
-    } catch {
+    } catch (err) {
       setError("เซิร์ฟเวอร์ไม่ตอบสนอง");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -75,7 +96,9 @@ function Home2() {
           <option value="SSD 1TB">SSD 1TB</option>
         </select>
 
-        <button onClick={handleSubmit}>✔ ตรวจสอบ</button>
+        <button onClick={handleSubmit} disabled={loading}>
+          {loading ? "กำลังตรวจสอบ..." : "✔ ตรวจสอบ"}
+        </button>
       </div>
     </div>
   );

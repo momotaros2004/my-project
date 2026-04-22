@@ -1,131 +1,186 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 
 function Home() {
   const navigate = useNavigate();
-  const [cart, setCart] = useState([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
 
-  const games = [
-    { id: 1, title: "Valorant", img: "/valorant.png", category: "play", specs: { cpu: "Intel i3-4150", gpu: "NVIDIA GeForce GT 730", ram: "4 GB", price: 8000 }},
-    { id: 2, title: "Call of duty", img: "/call of duty.png", category: "play", specs: { cpu: "Intel i5-7400", gpu: "NVIDIA GTX 1050", ram: "8 GB", price: 12000 }},
-    { id: 3, title: "Dead by daylight", img: "/dead by daylight.png", category: "play", specs: { cpu: "Intel i7-7700", gpu: "NVIDIA GTX 1060", ram: "16 GB", price: 18000 }},
-    { id: 4, title: "csgo", img: "/csgo.png", category: "work", specs: { cpu: "Intel i3-6100", gpu: "Intel HD Graphics 530", ram: "4 GB", price: 7000 }},
-    { id: 5, title: "Delta force", img: "/delta force.jpeg", category: "work", specs: { cpu: "Intel i5-6500", gpu: "Intel HD Graphics 530", ram: "8 GB", price: 10000 }},
-    { id: 6, title: "Game", img: "https://placehold.co/200x120?text=Chess+Master", category: "work", specs: { cpu: "Intel i7-7700", gpu: "NVIDIA GTX 1050", ram: "16 GB", price: 16000 }},
-    { id: 7, title: "Game", img: "https://placehold.co/200x120?text=Chess+Master", category: "play", specs: { cpu: "Intel i3-4150", gpu: "Intel HD Graphics 4400", ram: "4 GB", price: 6000 }},
-    { id: 8, title: "Photo Editor", img: "https://placehold.co/200x120?text=Chess+Master", category: "work", specs: { cpu: "Intel i5-7500", gpu: "NVIDIA GTX 1050 Ti", ram: "8 GB", price: 14000 }},
-    { id: 9, title: "Space Shooter", img: "https://placehold.co/200x120?text=Chess+Master", category: "play", specs: { cpu: "Intel i7-8700", gpu: "NVIDIA GTX 1070", ram: "16 GB", price: 22000 }},
-    { id: 10, title: "Note Keeper", img: "https://placehold.co/200x120?text=Chess+Master", category: "work", specs: { cpu: "Intel i3-7100", gpu: "Intel HD Graphics 630", ram: "4 GB", price: 7500 }},
+  const [cart, setCart] = useState(() => {
+    return JSON.parse(localStorage.getItem("cart")) || [];
+  });
+
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [bounceCart, setBounceCart] = useState(false);
+  const [search, setSearch] = useState("");
+
+  // 🔥 loading state (เพิ่มใหม่)
+  const [loading, setLoading] = useState(true);
+
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "",
+    message: "",
+  });
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
+
+  // ⏳ Skeleton timer
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup({ show: false, type: "", message: "" });
+    }, 2000);
+  };
+
+  const items = [
+    { id: 1, title: "Valorant", img: "https://picsum.photos/300?1" },
+    { id: 2, title: "Call of Duty", img: "https://picsum.photos/300?2" },
+    { id: 3, title: "Dead by Daylight", img: "https://picsum.photos/300?3" },
+    { id: 4, title: "CSGO", img: "https://picsum.photos/300?4" },
+    { id: 5, title: "GTA V", img: "https://picsum.photos/300?5" },
+    { id: 6, title: "Minecraft", img: "https://picsum.photos/300?6" },
+    { id: 7, title: "Photoshop", img: "https://picsum.photos/300?7" },
+    { id: 8, title: "Premiere Pro", img: "https://picsum.photos/300?8" },
+    { id: 9, title: "VS Code", img: "https://picsum.photos/300?9" },
+    { id: 10, title: "Figma", img: "https://picsum.photos/300?10" },
+    { id: 11, title: "Blender", img: "https://picsum.photos/300?11" },
+    { id: 12, title: "Unity Engine", img: "https://picsum.photos/300?12" },
+    { id: 13, title: "Unreal Engine", img: "https://picsum.photos/300?13" },
+    { id: 14, title: "Spotify", img: "https://picsum.photos/300?14" },
+    { id: 15, title: "Discord", img: "https://picsum.photos/300?15" },
   ];
 
-  const addToCart = (game) => {
-    if (!cart.find((item) => item.id === game.id)) {
-      setCart([...cart, game]);
+  const filteredItems = items.filter((i) =>
+    i.title.toLowerCase().includes(search.trim().toLowerCase())
+  );
+
+  const addToCart = (item) => {
+    if (cart.some((c) => c.id === item.id)) return;
+
+    setCart([...cart, item]);
+
+    setBounceCart(false);
+    setTimeout(() => setBounceCart(true), 10);
+    setTimeout(() => setBounceCart(false), 400);
+  };
+
+  const handleConfirm = () => {
+    if (cart.length === 0) {
+      showPopup("error", "⚠️ กรุณาเลือกสินค้า");
+      return;
     }
-  };
 
-  const toggleCartPopup = () => {
-    setIsCartOpen(!isCartOpen);
-  };
+    showPopup("success", "✔ ไปหน้าถัดไป...");
 
-  const playGames = games.filter((game) => game.category === "play");
-  const workGames = games.filter((game) => game.category === "work");
+    setTimeout(() => {
+      navigate("/SAW", { state: { cart } });
+    }, 800);
+  };
 
   return (
     <div className="home-container">
+
       <h1>PIM TO BUY COM</h1>
-      <p>Select games to add to your cart.</p>
 
-      {/* เล่นเกม */}
-      <section className="category-section">
-        <h2>เล่นเกม</h2>
-        <div className="games-list">
-          {playGames.map((game) => (
-            <div key={game.id} className="game-card">
-              <img src={game.img} alt={game.title} className="game-image" />
-              <h3>{game.title}</h3>
-
-              <button
-                className="add-button"
-                onClick={() => addToCart(game)}
-                disabled={cart.find((item) => item.id === game.id)}
-              >
-                {cart.find((item) => item.id === game.id) ? "Added" : "Add"}
-              </button>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ทำงาน */}
-      <section className="category-section">
-        <h2>ทำงาน</h2>
-        <div className="games-list">
-          {workGames.map((game) => (
-            <div key={game.id} className="game-card">
-              <img src={game.img} alt={game.title} className="game-image" />
-              <h3>{game.title}</h3>
-
-              <button
-                className="add-button"
-                onClick={() => addToCart(game)}
-                disabled={cart.find((item) => item.id === game.id)}
-              >
-                {cart.find((item) => item.id === game.id) ? "Added" : "Add"}
-              </button>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ไอคอนตะกร้าลอย */}
-      <div className="cart-icon" onClick={toggleCartPopup}>
-        🛒
-        {cart.length > 0 && <span className="cart-count">{cart.length}</span>}
+      {/* SEARCH */}
+      <div className="search-box">
+        <input
+          placeholder="ค้นหาเกม / แอพ..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </div>
 
-      {/* Cart Popup */}
+      {/* POPUP */}
+      {popup.show && (
+        <div className={`popup ${popup.type}`}>
+          {popup.message}
+        </div>
+      )}
+
+      {/* LIST */}
+      <section className="category-section">
+        <h2>Games & Apps</h2>
+
+        <div className="games-list">
+          {/* 🔥 SKELETON LOADING */}
+          {loading ? (
+            [...Array(8)].map((_, i) => (
+              <div key={i} className="skeleton-card"></div>
+            ))
+          ) : filteredItems.length === 0 ? (
+            <div className="no-result">ไม่พบรายการ</div>
+          ) : (
+            filteredItems.map((item) => (
+              <div key={item.id} className="game-card">
+                <img src={item.img} alt={item.title} />
+                <h3>{item.title}</h3>
+
+                <button
+                  className="add-button"
+                  onClick={() => addToCart(item)}
+                  disabled={cart.some((c) => c.id === item.id)}
+                >
+                  {cart.some((c) => c.id === item.id)
+                    ? "Added ✓"
+                    : "Add +"}
+                </button>
+              </div>
+            ))
+          )}
+        </div>
+      </section>
+
+      {/* CART ICON */}
+      <div
+        className={`cart-icon ${bounceCart ? "bounce" : ""}`}
+        onClick={() => setIsCartOpen(!isCartOpen)}
+      >
+        🛒
+        {cart.length > 0 && (
+          <span className="cart-count">{cart.length}</span>
+        )}
+      </div>
+
+      {/* CART POPUP */}
       {isCartOpen && (
         <div className="cart-popup">
-          <h3>Your Cart ({cart.length} games)</h3>
+          <h3>Your Cart</h3>
 
           <ul>
-            {cart.length === 0 ? (
-              <li style={{ background: "none", color: "#aaa", textAlign: "center" }}>
-                Your cart is empty
+            {cart.map((item) => (
+              <li key={item.id} className="cart-li">
+                {item.title}
+                <button
+                  className="delete-btn"
+                  onClick={() =>
+                    setCart(cart.filter((c) => c.id !== item.id))
+                  }
+                >
+                  ❌
+                </button>
               </li>
-            ) : (
-              cart.map((item) => (
-                <li key={item.id} className="cart-li">
-                  <span>{item.title}</span>
-
-                  <button
-                    className="delete-btn"
-                    onClick={() =>
-                      setCart(cart.filter((g) => g.id !== item.id))
-                    }
-                  >
-                    ❌
-                  </button>
-                </li>
-              ))
-            )}
+            ))}
           </ul>
 
-          {cart.length > 0 && (
-            <button
-              className="confirm-button"
-              onClick={() => navigate("/SAW", { state: { cart } })}
-            >
-              Confirm Purchase
-            </button>
-          )}
+          <button className="confirm-button" onClick={handleConfirm}>
+            Confirm Purchase
+          </button>
         </div>
       )}
     </div>
   );
-}//test
+}
 
 export default Home;

@@ -1,17 +1,28 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import "./login.scss";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("");
+
+    if (!username || !password) {
+      Swal.fire({
+        icon: "warning",
+        title: "กรอกข้อมูลไม่ครบ",
+        text: "กรุณากรอก username และ password",
+      });
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const res = await fetch("http://localhost:5000/api/login", {
@@ -23,28 +34,49 @@ function Login() {
       const data = await res.json();
 
       if (!res.ok) {
-        setMessage(`❌ ${data.error || "Login failed"}`);
+        Swal.fire({
+          icon: "error",
+          title: "เข้าสู่ระบบไม่สำเร็จ",
+          text: data.error || "Username หรือ Password ไม่ถูกต้อง",
+        });
         return;
       }
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("username", data.user.username);
 
+      await Swal.fire({
+        icon: "success",
+        title: "เข้าสู่ระบบสำเร็จ",
+        text: `ยินดีต้อนรับ ${data.user.username}`,
+        timer: 1500,
+        showConfirmButton: false,
+        backdrop: true,
+      });
+
       navigate("/beforehome");
+
     } catch (err) {
-      setMessage("⚠️ Cannot connect to server");
+      Swal.fire({
+        icon: "error",
+        title: "เกิดข้อผิดพลาด",
+        text: "ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="login-container">
       <form className="login" onSubmit={handleSubmit}>
+        <h2>Welcome Back 👋</h2>
+
         <input
           type="text"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          required
         />
 
         <input
@@ -52,16 +84,12 @@ function Login() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          required
         />
 
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Loading..." : "Login"}
+        </button>
       </form>
-
-  
-
-     
-      
     </div>
   );
 }

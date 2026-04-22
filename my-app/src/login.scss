@@ -3,41 +3,69 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
 
   .login {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    padding: 30px;
+    border-radius: 16px;
+    width: 320px;
     display: flex;
     flex-direction: column;
-    width: 300px;
-    gap: 12px;
+    gap: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+
+    h2 {
+      text-align: center;
+      color: white;
+      margin-bottom: 10px;
+    }
 
     input {
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      transition: 0.3s;
+
+      &::placeholder {
+        color: #ddd;
+      }
+
+      &:focus {
+        background: rgba(255, 255, 255, 0.25);
+        transform: scale(1.02);
+      }
     }
 
     button {
-      padding: 10px;
+      padding: 12px;
       border: none;
-      border-radius: 6px;
-      background: #3498db;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #3498db, #6dd5fa);
       color: white;
+      font-weight: bold;
       cursor: pointer;
+      transition: 0.3s;
 
       &:hover {
-        background: #2980b9;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+      }
+
+      &:active {
+        transform: scale(0.98);
       }
     }
   }
 
   .message {
-    margin-top: 10px;
-    color: red;
-  }
-
-  a {
     margin-top: 15px;
-    font-size: 12px;
+    color: #ff6b6b;
+    text-align: center;
+    font-weight: bold;
   }
 }

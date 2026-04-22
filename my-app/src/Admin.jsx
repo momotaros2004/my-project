@@ -1,12 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 import "./Admin.css";
 
 function Admin() {
-  const [selectedTable, setSelectedTable] = useState(""); 
+  const [selectedTable, setSelectedTable] = useState("");
   const [form, setForm] = useState({});
 
-  // ฟิลด์ของ comset
   const comsetFields = {
     name: "",
     cpu: "",
@@ -21,7 +21,6 @@ function Admin() {
     efficiency: "",
   };
 
-  // ฟิลด์ของ products
   const productFields = {
     name: "",
     type: "",
@@ -40,25 +39,59 @@ function Admin() {
   };
 
   const handleSubmit = async () => {
-    if (!selectedTable) return alert("กรุณาเลือกตารางก่อน");
+    if (!selectedTable) {
+      Swal.fire("กรุณาเลือกตารางก่อน");
+      return;
+    }
+
+    // 🔐 check token
+    const token = localStorage.getItem("token");
+    if (!token) {
+      Swal.fire({
+        icon: "error",
+        title: "ไม่ได้เข้าสู่ระบบ",
+        text: "กรุณา login ก่อนใช้งาน",
+      });
+      return;
+    }
 
     try {
-      // 🔥 แก้ URL ตรงนี้ให้ตรงกับ Backend
       const url =
         selectedTable === "comset"
           ? "http://localhost:5000/api/comset/add"
           : "http://localhost:5000/api/products/add";
 
-      await axios.post(url, form);
+      const res = await axios.post(url, form, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      alert("เพิ่มข้อมูลสำเร็จ!");
+      Swal.fire({
+        icon: "success",
+        title: "สำเร็จ",
+        text: "เพิ่มข้อมูลเรียบร้อย",
+      });
 
-      // เคลียร์ฟอร์มหลังจากเพิ่มสำเร็จ
       setForm(selectedTable === "comset" ? comsetFields : productFields);
-
     } catch (err) {
-      console.error(err);
-      alert("เกิดข้อผิดพลาดในการเพิ่มข้อมูล");
+      console.log(err);
+
+      if (err.response?.status === 401) {
+        Swal.fire({
+          icon: "warning",
+          title: "Session หมดอายุ",
+          text: "กรุณา login ใหม่",
+        });
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "เกิดข้อผิดพลาด",
+          text: "ไม่สามารถเพิ่มข้อมูลได้",
+        });
+      }
     }
   };
 
@@ -66,7 +99,6 @@ function Admin() {
     <div className="admin-container">
       <h1>Admin – เพิ่มข้อมูล</h1>
 
-      {/* ปุ่มเลือกตาราง */}
       <div className="table-select">
         <button
           className={selectedTable === "comset" ? "active" : ""}
@@ -83,7 +115,6 @@ function Admin() {
         </button>
       </div>
 
-      {/* ฟอร์ม */}
       {selectedTable && (
         <div className="form-container">
           <h2>กำลังเพิ่มข้อมูลใน: {selectedTable}</h2>
@@ -97,15 +128,13 @@ function Admin() {
                   onChange={handleChange}
                   value={form[field]}
                 >
-                  <option value="" disabled>
-                    เลือกประเภทสินค้า
-                  </option>
+                  <option value="">เลือกประเภทสินค้า</option>
                   <option value="cpu">CPU</option>
                   <option value="gpu">GPU</option>
                   <option value="ram">RAM</option>
                   <option value="ssd">SSD</option>
                   <option value="hdd">HDD</option>
-                  <option value="case">เคส</option>
+                  <option value="case">Case</option>
                   <option value="psu">PSU</option>
                 </select>
               );
@@ -115,7 +144,7 @@ function Admin() {
               <input
                 key={field}
                 name={field}
-                placeholder={field.toUpperCase()}
+                placeholder={field}
                 value={form[field]}
                 onChange={handleChange}
               />

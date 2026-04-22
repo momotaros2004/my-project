@@ -1,32 +1,98 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 import "./AdminTable.css";
 
 function AdminTable() {
   const [data, setData] = useState([]);
 
+  const token = localStorage.getItem("token");
+
   const loadData = async () => {
-    const res = await axios.get("http://localhost:5000/comset");
-    setData(res.data);
+    try {
+      const res = await axios.get("http://localhost:5000/api/comset", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setData(res.data);
+    } catch (err) {
+      console.log(err);
+
+      if (err.response?.status === 401) {
+        Swal.fire({
+          icon: "warning",
+          title: "Session หมดอายุ",
+          text: "กรุณา login ใหม่",
+        });
+
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "โหลดข้อมูลไม่สำเร็จ",
+        });
+      }
+    }
   };
 
   const deleteItem = async (id) => {
     if (!window.confirm("ต้องการลบสินค้านี้จริงไหม?")) return;
 
-    await axios.delete(`http://localhost:5000/comset/delete/${id}`);
-    loadData();
+    try {
+      await axios.delete(
+        `http://localhost:5000/api/comset/delete/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      Swal.fire({
+        icon: "success",
+        title: "ลบสำเร็จ",
+      });
+
+      loadData();
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "ลบไม่สำเร็จ",
+      });
+    }
   };
 
   const updateItem = async (id) => {
     const newPrice = prompt("ใส่ราคาใหม่:");
 
-    if (newPrice === null) return;
+    if (!newPrice) return;
 
-    await axios.put(`http://localhost:5000/comset/update/${id}`, {
-      price: newPrice,
-    });
+    try {
+      await axios.put(
+        `http://localhost:5000/api/comset/update/${id}`,
+        { price: newPrice },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    loadData();
+      Swal.fire({
+        icon: "success",
+        title: "อัปเดตสำเร็จ",
+      });
+
+      loadData();
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "อัปเดตไม่สำเร็จ",
+      });
+    }
   };
 
   useEffect(() => {
@@ -85,7 +151,6 @@ function AdminTable() {
           ))}
         </tbody>
       </table>
-
     </div>
   );
 }

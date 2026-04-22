@@ -1,20 +1,34 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import "./Recommend2.css";
 
 export default function Recommend2() {
   const { state } = useLocation();
   const navigate = useNavigate();
 
-  if (!state || !state.com) {
+  const com = state?.com;
+
+  // 🔐 กันไม่ login เข้า
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  // ❌ ไม่มีข้อมูล (หรือ refresh แล้ว state หาย)
+  if (!com) {
     return (
       <div className="rec-container">
-        <h2>❌ ไม่มีข้อมูล</h2>
-        <button onClick={() => navigate("/home2")}>กลับ</button>
+        <h2>❌ ไม่มีข้อมูล หรือรีเฟรชหน้า</h2>
+
+        <button onClick={() => navigate("/home2")}>
+          🔙 กลับ
+        </button>
       </div>
     );
   }
-
-  const { com } = state;
 
   return (
     <div className="rec-container">
@@ -27,7 +41,7 @@ export default function Recommend2() {
         <p>GPU: {com.gpu}</p>
         <p>RAM: {com.ram}</p>
         <p>Storage: {com.storage}</p>
-        <p>ราคา: {com.price} บาท</p>
+        <p>ราคา: {Number(com.price).toLocaleString()} บาท</p>
         <p>Tier: {com.tier}</p>
 
         <button onClick={() => navigate("/home2")}>

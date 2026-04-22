@@ -1,30 +1,106 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./login";
+
+import Login from "./Login";
 import Home from "./Home";
 import Recommend from "./Recommend";
 import Recommend2 from "./Recommend2";
-import BeforeHome from "./beforehome";
+import BeforeHome from "./BeforeHome";
 import Home2 from "./Home2";
 import Admin from "./Admin";
 import AdminTable from "./AdminTable";
 import SAW from "./SAW";
 import SAWResult from "./SAWResult";
-
+import ProtectedRoute from "./ProtectedRoute"; // ✅ แก้ตรงนี้
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Login */}
         <Route path="/" element={<Login />} />
-        <Route path="/beforehome" element={<BeforeHome />} />
-        <Route path="/home" element={<Home />} />
-       <Route path="/home2" element={<Home2 />} />
-        <Route path="/recommend" element={<Recommend />} />
-        <Route path="/recommend2" element={<Recommend2 />} />
-          <Route path="/admin" element={<Admin />} />
-        <Route path="/admin/table" element={<AdminTable />} />
-        <Route path="/SAW" element={<SAW />} />
-         <Route path="/SAWResult" element={<SAWResult />} />
+        <Route path="/login" element={<Login />} />
+
+        {/* Protected */}
+        <Route
+          path="/beforehome"
+          element={
+            <ProtectedRoute>
+              <BeforeHome />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/home2"
+          element={
+            <ProtectedRoute>
+              <Home2 />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/recommend"
+          element={
+            <ProtectedRoute>
+              <Recommend />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/recommend2"
+          element={
+            <ProtectedRoute>
+              <Recommend2 />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <Admin />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/table"
+          element={
+            <ProtectedRoute>
+              <AdminTable />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/SAW"
+          element={
+            <ProtectedRoute>
+              <SAW />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/SAWResult"
+          element={
+            <ProtectedRoute>
+              <SAWResult />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
