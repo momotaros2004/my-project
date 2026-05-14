@@ -11,6 +11,7 @@ function SAW() {
   const [upgrade, setUpgrade] = useState("");
   const [efficiency, setEfficiency] = useState("");
 
+<<<<<<< HEAD
   // 🔥 popup state
   const [popup, setPopup] = useState({ show: false, type: "", message: "" });
 
@@ -25,6 +26,23 @@ function SAW() {
   const handleNext = async () => {
     if (!performance || !price || !upgrade || !efficiency) {
       showPopup("error", "⚠ กรุณาเลือก weight ให้ครบ");
+=======
+  const p = Number(performance || 0);
+  const pr = Number(price || 0);
+  const u = Number(upgrade || 0);
+  const e = Number(efficiency || 0);
+
+  const total = +(p + pr + u + e).toFixed(2);
+
+  const handleNext = async () => {
+    if (!performance || !price || !upgrade || !efficiency) {
+      alert("⚠️ กรุณาเลือก weight ให้ครบ");
+      return;
+    }
+
+    if (total !== 1) {
+      alert(`❌ ผลรวม weight ต้องเท่ากับ 1\nตอนนี้ได้ = ${total}`);
+>>>>>>> 300bafd8fffe67ea814c655abbfd8acf26ab51e3
       return;
     }
 
@@ -43,6 +61,7 @@ function SAW() {
     const token = localStorage.getItem("token");
 
     const weightData = {
+<<<<<<< HEAD
       performance: Number(performance),
       price: Number(price),
       upgrade: Number(upgrade),
@@ -84,11 +103,31 @@ function SAW() {
       } else {
         showPopup("error", "❌ เกิดข้อผิดพลาด");
       }
+=======
+      performance: p,
+      price: pr,
+      upgrade: u,
+      efficiency: e,
+    };
+
+    try {
+      const res = await axios.post("http://localhost:5000/api/saw/filter", {
+        cart,
+        weights: weightData,
+      });
+
+      localStorage.setItem("saw_results", JSON.stringify(res.data));
+      navigate("/sawresult");
+    } catch (err) {
+      console.log(err);
+      alert("Server error");
+>>>>>>> 300bafd8fffe67ea814c655abbfd8acf26ab51e3
     }
   };
 
   return (
     <div className="saw-container">
+<<<<<<< HEAD
 
       {/* 🔥 POPUP */}
       {popup.show && (
@@ -119,6 +158,64 @@ function SAW() {
         ))}
 
         <button onClick={handleNext}>Next</button>
+=======
+      <div className="saw-box">
+        <h2>SAW WEIGHT</h2>
+
+        <select onChange={(e) => setPerformance(e.target.value)}>
+          <option value="">Performance</option>
+          <option value="0.1">0.1</option>
+          <option value="0.2">0.2</option>
+          <option value="0.3">0.3</option>
+          <option value="0.4">0.4</option>
+        </select>
+
+        <select onChange={(e) => setPrice(e.target.value)}>
+          <option value="">Price</option>
+          <option value="0.1">0.1</option>
+          <option value="0.2">0.2</option>
+          <option value="0.3">0.3</option>
+          <option value="0.4">0.4</option>
+        </select>
+
+        <select onChange={(e) => setUpgrade(e.target.value)}>
+          <option value="">Upgrade</option>
+          <option value="0.1">0.1</option>
+          <option value="0.2">0.2</option>
+          <option value="0.3">0.3</option>
+          <option value="0.4">0.4</option>
+        </select>
+
+        <select onChange={(e) => setEfficiency(e.target.value)}>
+          <option value="">Efficiency</option>
+          <option value="0.1">0.1</option>
+          <option value="0.2">0.2</option>
+          <option value="0.3">0.3</option>
+          <option value="0.4">0.4</option>
+        </select>
+
+        {/* TOTAL */}
+        <p
+          style={{
+            color: total === 1 ? "#00ffcc" : "red",
+            marginTop: "10px",
+            fontWeight: "bold",
+          }}
+        >
+          Total Weight : {total}
+        </p>
+
+        <button
+          onClick={handleNext}
+          disabled={total !== 1}
+          style={{
+            opacity: total === 1 ? 1 : 0.4,
+            cursor: total === 1 ? "pointer" : "not-allowed",
+          }}
+        >
+          NEXT
+        </button>
+>>>>>>> 300bafd8fffe67ea814c655abbfd8acf26ab51e3
       </div>
     </div>
   );
