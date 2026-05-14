@@ -1,8 +1,9 @@
-<<<<<<< HEAD
-body, html, #root {
+body,
+html,
+#root {
   height: 100%;
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: #eaf4ff;
   background: linear-gradient(135deg, #0a1a2f, #0f2b4a, #134e6f);
   overflow-x: hidden;
@@ -11,6 +12,7 @@ body, html, #root {
 /* ===================== */
 /* MAIN CONTAINER */
 /* ===================== */
+
 .home-container {
   min-height: 200vh;
   padding: 40px 60px;
@@ -23,6 +25,7 @@ body, html, #root {
 /* ===================== */
 /* TITLE */
 /* ===================== */
+
 h1 {
   text-align: center;
   font-size: 3rem;
@@ -44,55 +47,10 @@ h1 {
 /* ===================== */
 /* GRID */
 /* ===================== */
-=======
-* {
-  box-sizing: border-box;
-  font-family: "Segoe UI", sans-serif;
-}
 
-body {
-  margin: 0;
-  background: radial-gradient(circle at top, #050b15, #000);
-}
-
-/* MAIN */
-
-.home-container {
-  min-height: 100vh;
-  padding: 40px;
-  color: white;
-  text-align: center;
-}
-
-.home-container h1 {
-  font-size: 40px;
-  color: #00eaff;
-  letter-spacing: 4px;
-  text-shadow: 0 0 20px #00eaff;
-}
-
-.home-container p {
-  color: #aaa;
-}
-
-/* CATEGORY */
-
-.category-section {
-  margin-top: 50px;
-}
-
-.category-section h2 {
-  color: #00ffd5;
-  letter-spacing: 2px;
-}
-
-/* GAME GRID */
-
->>>>>>> 300bafd8fffe67ea814c655abbfd8acf26ab51e3
 .games-list {
   margin-top: 25px;
   display: grid;
-<<<<<<< HEAD
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 20px;
 }
@@ -100,6 +58,7 @@ body {
 /* ===================== */
 /* CARD */
 /* ===================== */
+
 .game-card {
   background: rgba(20, 40, 70, 0.6);
   border: 1px solid rgba(100, 180, 255, 0.15);
@@ -107,7 +66,8 @@ body {
   padding: 15px;
   backdrop-filter: blur(10px);
   transition: 0.3s ease;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -116,27 +76,7 @@ body {
 .game-card:hover {
   transform: translateY(-8px);
   border-color: #4fc3f7;
-  box-shadow: 0 10px 30px rgba(79,195,247,0.3);
-=======
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 25px;
-}
-
-/* GAME CARD */
-
-.game-card {
-  background: rgba(255,255,255,.05);
-  border-radius: 15px;
-  padding: 15px;
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(0,255,255,.3);
-  transition: .3s;
-}
-
-.game-card:hover {
-  transform: translateY(-10px) scale(1.03);
-  box-shadow: 0 0 25px #00ffff;
->>>>>>> 300bafd8fffe67ea814c655abbfd8acf26ab51e3
+  box-shadow: 0 10px 30px rgba(79, 195, 247, 0.3);
 }
 
 .game-card img {
@@ -144,7 +84,6 @@ body {
   height: 130px;
   object-fit: cover;
   border-radius: 10px;
-<<<<<<< HEAD
   margin-bottom: 10px;
 }
 
@@ -158,16 +97,21 @@ body {
 /* ===================== */
 /* BUTTON */
 /* ===================== */
+
 .add-button {
   width: 100%;
   padding: 10px 14px;
   border: none;
   border-radius: 14px;
+
   font-weight: 700;
   font-size: 1rem;
+
   color: #06202e;
+
   background: linear-gradient(135deg, #4fc3f7, #00e5ff);
   box-shadow: 0 6px 18px rgba(79, 195, 247, 0.35);
+
   cursor: pointer;
   transition: all 0.25s ease;
 }
@@ -191,39 +135,11 @@ body {
 /* ===================== */
 /* CART ICON */
 /* ===================== */
-=======
-}
 
-.game-card h3 {
-  margin: 10px 0;
-}
-
-/* ADD BUTTON */
-
-.add-button {
-  margin-top: 10px;
-  padding: 8px 20px;
-  border-radius: 20px;
-  border: none;
-  background: linear-gradient(135deg,#00eaff,#00ff88);
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.add-button:disabled {
-  background: #333;
-  color: #777;
-  cursor: not-allowed;
-}
-
-/* FLOAT CART */
-
->>>>>>> 300bafd8fffe67ea814c655abbfd8acf26ab51e3
 .cart-icon {
   position: fixed;
   bottom: 25px;
   right: 25px;
-<<<<<<< HEAD
 
   width: 55px;
   height: 55px;
@@ -238,7 +154,8 @@ body {
   font-size: 26px;
 
   cursor: pointer;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
 
   transition: transform 0.2s ease;
 
@@ -247,34 +164,40 @@ body {
 
 .cart-icon:hover {
   transform: scale(1.1);
-=======
-  background: #00eaff;
-  color: black;
-  padding: 15px;
-  border-radius: 50%;
-  font-size: 22px;
-  cursor: pointer;
-  box-shadow: 0 0 25px #00eaff;
->>>>>>> 300bafd8fffe67ea814c655abbfd8acf26ab51e3
 }
 
-/* bounce animation */
+/* bounce */
+
 .cart-icon.bounce {
   animation: bounce 0.4s ease;
 }
 
 @keyframes bounce {
-  0% { transform: scale(1); }
-  25% { transform: scale(1.2); }
-  50% { transform: scale(0.9); }
-  75% { transform: scale(1.1); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  25% {
+    transform: scale(1.2);
+  }
+
+  50% {
+    transform: scale(0.9);
+  }
+
+  75% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* count */
+
 .cart-count {
   position: absolute;
-<<<<<<< HEAD
   top: 6px;
   right: 6px;
 
@@ -283,12 +206,14 @@ body {
 
   font-size: 12px;
   border-radius: 50%;
+
   padding: 3px 6px;
 }
 
 /* ===================== */
 /* CART POPUP */
 /* ===================== */
+
 .cart-popup {
   position: fixed;
   bottom: 90px;
@@ -304,7 +229,7 @@ body {
 
   padding: 15px;
 
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 
   z-index: 9999;
 }
@@ -316,7 +241,7 @@ body {
   padding: 8px;
   margin-bottom: 6px;
 
-  background: rgba(79,195,247,0.1);
+  background: rgba(79, 195, 247, 0.1);
   border-radius: 8px;
 }
 
@@ -328,6 +253,7 @@ body {
 }
 
 /* confirm */
+
 .confirm-button {
   width: 100%;
   padding: 12px;
@@ -349,16 +275,18 @@ body {
 
 .confirm-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* ========================= */
 /* POPUP ALERT */
 /* ========================= */
+
 .popup {
   position: fixed;
   top: 20px;
   left: 50%;
+
   transform: translateX(-50%);
 
   padding: 12px 20px;
@@ -368,6 +296,7 @@ body {
   color: white;
 
   animation: fadeIn 0.3s ease;
+
   z-index: 9999;
 }
 
@@ -380,86 +309,18 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translate(-50%, -10px); }
-  to { opacity: 1; transform: translate(-50%, 0); }
-=======
-  top: -5px;
-  right: -5px;
-  background: red;
-  color: white;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  font-size: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  from {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
 }
 
-/* CART POPUP */
-
-.cart-popup {
-  position: fixed;
-  right: 30px;
-  bottom: 90px;
-  width: 300px;
-  background: rgba(0,0,0,.9);
-  border-radius: 15px;
-  padding: 20px;
-  border: 1px solid #00ffff;
-  box-shadow: 0 0 30px #00ffff;
-  animation: popup .3s ease;
-}
-
-@keyframes popup {
-  from { transform: scale(.7); opacity:0 }
-  to { transform: scale(1); opacity:1 }
-}
-
-.cart-popup h3 {
-  color: #00ffff;
-}
-
-/* CART LIST */
-
-.cart-popup ul {
-  list-style: none;
-  padding: 0;
-}
-
-.cart-li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(255,255,255,.05);
-  margin-top: 10px;
-  padding: 8px;
-  border-radius: 8px;
-}
-
-/* DELETE */
-
-.delete-btn {
-  background: none;
-  border: none;
-  color: red;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-/* CONFIRM */
-
-.confirm-button {
-  width: 100%;
-  margin-top: 15px;
-  padding: 10px;
-  border-radius: 25px;
-  border: none;
-  background: linear-gradient(135deg,#00ff88,#00eaff);
-  font-weight: bold;
-  cursor: pointer;
->>>>>>> 300bafd8fffe67ea814c655abbfd8acf26ab51e3
-}
+/* SEARCH */
 
 .search-box {
   display: flex;
@@ -474,7 +335,7 @@ body {
   border-radius: 12px;
   border: 1px solid #4fc3f7;
 
-  background: rgba(20,40,70,0.6);
+  background: rgba(20, 40, 70, 0.6);
   color: #eaf4ff;
 
   outline: none;
@@ -486,28 +347,41 @@ body {
   color: #9ccbe6;
 }
 
+/* NO RESULT */
+
 .no-result {
   grid-column: 1 / -1;
   text-align: center;
   padding: 30px;
+
   color: #81d4fa;
   font-weight: bold;
 }
 
+/* SKELETON */
+
 .skeleton-card {
   height: 220px;
   border-radius: 14px;
+
   background: linear-gradient(
     90deg,
     #1e2a33 25%,
     #2c3e50 50%,
     #1e2a33 75%
   );
+
   background-size: 200% 100%;
+
   animation: shimmer 1.2s infinite;
 }
 
 @keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }

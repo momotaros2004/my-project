@@ -1,18 +1,4 @@
 {
-  "dependencies": {
-    "axios": "^1.13.2",
-    "bcrypt": "^6.0.0",
-<<<<<<< HEAD
-    "react-router-dom": "^7.13.0"
-=======
-    "bourbon": "^7.3.0",
-<<<<<<< HEAD
-    "cors": "^2.8.6",
-    "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3",
-    "sass": "^1.97.3",
-    "sweetalert2": "^11.26.24"
-  },
   "name": "my-project",
   "version": "1.0.0",
   "main": "index.js",
@@ -22,10 +8,16 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
-=======
-    "sass": "^1.97.3"
->>>>>>> 82b14ba81260d934bbde5f4b236e642d43f6c49c
+  "description": "",
+  "dependencies": {
+    "axios": "^1.13.2",
+    "bcrypt": "^6.0.0",
+    "bourbon": "^7.3.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "react-router-dom": "^7.13.0",
+    "sass": "^1.97.3",
+    "sweetalert2": "^11.26.24"
   }
->>>>>>> 300bafd8fffe67ea814c655abbfd8acf26ab51e3
 }

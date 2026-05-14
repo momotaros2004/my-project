@@ -7,7 +7,16 @@ function BeforeHome() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
 
-<<<<<<< HEAD
+  // ดึงชื่อผู้ใช้จาก localStorage
+  useEffect(() => {
+    const name = localStorage.getItem("username");
+
+    if (name) {
+      setUsername(name);
+    }
+  }, []);
+
+  // Logout
   const handleLogout = async () => {
     const result = await Swal.fire({
       title: "ออกจากระบบ?",
@@ -32,22 +41,6 @@ function BeforeHome() {
 
       navigate("/login");
     }
-=======
-  // ดึงชื่อผู้ใช้จาก localStorage
-  useEffect(() => {
-    const name = localStorage.getItem("username");
-    if (name) setUsername(name);
-  }, []);
-
-  // Logout + confirm
-  const handleLogout = () => {
-    const confirmLogout = window.confirm("คุณต้องการออกจากระบบใช่หรือไม่?");
-
-    if (!confirmLogout) return;
-
-    localStorage.clear();
-    navigate("/", { replace: true });
->>>>>>> 300bafd8fffe67ea814c655abbfd8acf26ab51e3
   };
 
   return (
