@@ -11,11 +11,10 @@ body, html, #root {
 /* MAIN CONTAINER */
 /* ===================== */
 .home-container {
-  min-height: 100vh;
+  min-height: 200vh;
   padding: 40px 60px;
   box-sizing: border-box;
   background: rgba(10, 20, 35, 0.75);
-  backdrop-filter: blur(12px);
   display: flex;
   flex-direction: column;
 }
@@ -88,40 +87,31 @@ h1 {
 }
 
 /* ===================== */
-/* 🔥 CLEAN BUTTON (FIXED FINAL) */
+/* BUTTON */
 /* ===================== */
 .add-button {
   width: 100%;
   padding: 10px 14px;
-
   border: none;
   border-radius: 14px;
-
   font-weight: 700;
   font-size: 1rem;
-
   color: #06202e;
-
   background: linear-gradient(135deg, #4fc3f7, #00e5ff);
   box-shadow: 0 6px 18px rgba(79, 195, 247, 0.35);
-
   cursor: pointer;
-
   transition: all 0.25s ease;
 }
 
-/* hover */
 .add-button:hover:not(:disabled) {
   transform: translateY(-4px);
   box-shadow: 0 12px 28px rgba(0, 229, 255, 0.55);
 }
 
-/* click */
 .add-button:active:not(:disabled) {
   transform: scale(0.94);
 }
 
-/* disabled */
 .add-button:disabled {
   background: #1e2a33;
   color: #6b7c8a;
@@ -153,6 +143,8 @@ h1 {
   box-shadow: 0 8px 25px rgba(0,0,0,0.4);
 
   transition: transform 0.2s ease;
+
+  z-index: 9999;
 }
 
 .cart-icon:hover {
@@ -205,6 +197,8 @@ h1 {
   padding: 15px;
 
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+
+  z-index: 9999;
 }
 
 .cart-li {
@@ -249,6 +243,7 @@ h1 {
   transform: translateY(-2px);
   box-shadow: 0 10px 20px rgba(0,0,0,0.3);
 }
+
 /* ========================= */
 /* POPUP ALERT */
 /* ========================= */
@@ -280,6 +275,7 @@ h1 {
   from { opacity: 0; transform: translate(-50%, -10px); }
   to { opacity: 1; transform: translate(-50%, 0); }
 }
+
 .search-box {
   display: flex;
   justify-content: center;
