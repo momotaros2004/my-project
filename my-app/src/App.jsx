@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Login from "./Login";
+import Login from "./login.jsx";
 import Home from "./Home";
 import Recommend from "./Recommend";
 import Recommend2 from "./Recommend2";
-import BeforeHome from "./BeforeHome";
+import BeforeHome from "./beforehome.jsx";
 import Home2 from "./Home2";
 import Admin from "./Admin";
 import AdminTable from "./AdminTable";

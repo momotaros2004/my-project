@@ -1,23 +1,29 @@
 {
-  "name": "my-project",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "axios": "^1.13.2",
-    "bcrypt": "^6.0.0",
-    "bourbon": "^7.3.0",
-    "cors": "^2.8.6",
-    "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3",
-    "react-router-dom": "^7.13.0",
-    "sass": "^1.97.3",
-    "sweetalert2": "^11.26.24"
-  }
+    "name":  "my-project",
+    "version":  "1.0.0",
+    "main":  "index.js",
+    "scripts":  {
+                    "test":  "echo \"Error: no test specified\" \u0026\u0026 exit 1",
+                    "dev":  "npm --prefix my-app run dev",
+                    "start":  "npm run dev",
+                    "dev:backend":  "npm --prefix backend start",
+                    "build":  "npm --prefix my-app run build"
+                },
+    "keywords":  [
+
+                 ],
+    "author":  "",
+    "license":  "ISC",
+    "description":  "",
+    "dependencies":  {
+                         "axios":  "^1.13.2",
+                         "bcrypt":  "^6.0.0",
+                         "bourbon":  "^7.3.0",
+                         "cors":  "^2.8.6",
+                         "express":  "^5.2.1",
+                         "jsonwebtoken":  "^9.0.3",
+                         "react-router-dom":  "^7.13.0",
+                         "sass":  "^1.97.3",
+                         "sweetalert2":  "^11.26.24"
+                     }
 }
