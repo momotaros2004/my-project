@@ -11,10 +11,14 @@ import AdminTable from "./AdminTable";
 import SAW from "./SAW";
 import SAWResult from "./SAWResult";
 import ProtectedRoute from "./ProtectedRoute";
+import SiteControls from "./SiteControls";
+import LoadingOverlay from "./LoadingOverlay";
 
 function App() {
   return (
     <BrowserRouter>
+      <SiteControls />
+      <LoadingOverlay />
       <Routes>
 
         {/* Login */}

@@ -142,6 +142,29 @@ app.delete("/api/comset/delete/:id", verifyToken, (req, res) => {
 });
 
 
+// ======================= MANUAL PC MATCH =======================
+app.post("/api/check-com", verifyToken, (req, res) => {
+  const { cpu, gpu, ram, storage } = req.body;
+
+  if (!cpu || !gpu || !ram || !storage) {
+    return res.status(400).json({ error: "Missing PC component selection" });
+  }
+
+  const sql = `
+    SELECT * FROM comset
+    WHERE cpu = ? AND gpu = ? AND ram = ? AND storage = ?
+    ORDER BY price ASC
+    LIMIT 1
+  `;
+
+  db.query(sql, [cpu, gpu, ram, storage], (err, results) => {
+    if (err) return res.status(500).json({ error: "Database error" });
+    if (results.length === 0) return res.json({ found: false });
+
+    return res.json({ found: true, data: results[0] });
+  });
+});
+
 // ======================= SAW (FIXED + PROTECTED) =======================
 app.post("/api/saw/filter", verifyToken, (req, res) => {
   const { weights } = req.body;

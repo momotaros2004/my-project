@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./Recommend.css";
+import { useLanguage } from "./LanguageContext";
 
 function Recommend() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const { cart } = location.state || { cart: [] };
 
@@ -20,8 +22,8 @@ function Recommend() {
   if (!cart || cart.length === 0) {
     return (
       <div className="recommend-container">
-        <h2>No games selected</h2>
-        <button onClick={() => navigate("/home")}>Back to Home</button>
+        <h2>{t("recommend.noGames")}</h2>
+        <button onClick={() => navigate("/home")}>{t("recommend.home")}</button>
       </div>
     );
   }
@@ -45,9 +47,9 @@ function Recommend() {
 
   return (
     <div className="recommend-container">
-      <h1>Recommended PC Specs</h1>
+      <h1>{t("recommend.title")}</h1>
 
-      <p>Based on your selected games:</p>
+      <p>{t("recommend.based")}</p>
 
       <ul>
         {cart.map((game) => (
@@ -56,24 +58,24 @@ function Recommend() {
       </ul>
 
       <div className="pc-specs">
-        <h2>Recommended PC</h2>
+        <h2>{t("recommend.pc")}</h2>
 
-        <p><strong>CPU:</strong> {maxSpec.cpu}</p>
-        <p><strong>GPU:</strong> {maxSpec.gpu}</p>
-        <p><strong>RAM:</strong> {maxSpec.ram}</p>
+        <p><strong>{t("pc.cpu")}:</strong> {maxSpec.cpu}</p>
+        <p><strong>{t("pc.gpu")}:</strong> {maxSpec.gpu}</p>
+        <p><strong>{t("pc.ram")}:</strong> {maxSpec.ram}</p>
 
         <p>
-          <strong>Estimated PC Price:</strong>{" "}
-          {Number(maxSpec.price).toLocaleString()} THB
+          <strong>{t("recommend.estimatedPrice")}:</strong>{" "}
+          {Number(maxSpec.price).toLocaleString()} {t("currency.thb")}
         </p>
       </div>
 
       <h3>
-        Total Price of Selected Games:{" "}
-        {totalGamePrice.toLocaleString()} THB
+        {t("recommend.totalGames")}:{" "}
+        {totalGamePrice.toLocaleString()} {t("currency.thb")}
       </h3>
 
-      <button onClick={() => navigate("/home")}>Back to Home</button>
+      <button onClick={() => navigate("/home")}>{t("recommend.home")}</button>
     </div>
   );
 }

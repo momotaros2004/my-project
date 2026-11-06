@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { useLanguage } from "./LanguageContext";
+import { useLoading } from "./LoadingContext";
 import "./login.scss";
 
 function Login() {
@@ -9,6 +11,8 @@ function Login() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const { t } = useLanguage();
+  const { startLoading } = useLoading();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -24,13 +28,14 @@ function Login() {
     if (!username || !password) {
       Swal.fire({
         icon: "warning",
-        title: "กรอกข้อมูลไม่ครบ",
-        text: "กรุณากรอก username และ password",
+        title: t("login.required.title"),
+        text: t("login.required.text"),
       });
       return;
     }
 
     setLoading(true);
+    const stopLoading = startLoading();
 
     try {
       const res = await fetch("http://localhost:5000/api/login", {
@@ -49,8 +54,8 @@ function Login() {
       if (!res.ok) {
         Swal.fire({
           icon: "error",
-          title: "เข้าสู่ระบบไม่สำเร็จ",
-          text: data.error || "Username หรือ Password ไม่ถูกต้อง",
+          title: t("login.failed.title"),
+          text: data.error || t("login.failed.text"),
         });
 
         setLoading(false);
@@ -59,11 +64,12 @@ function Login() {
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("username", data.user.username);
+      stopLoading();
 
       await Swal.fire({
         icon: "success",
-        title: "เข้าสู่ระบบสำเร็จ",
-        text: `ยินดีต้อนรับ ${data.user.username}`,
+        title: t("login.success.title"),
+        text: t("login.success.text", { user: data.user.username }),
         timer: 1500,
         showConfirmButton: false,
       });
@@ -73,10 +79,11 @@ function Login() {
     } catch (err) {
       Swal.fire({
         icon: "error",
-        title: "เกิดข้อผิดพลาด",
-        text: "ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้",
+        title: t("login.error.title"),
+        text: t("login.error.text"),
       });
     } finally {
+      stopLoading();
       setLoading(false);
     }
   };
@@ -85,11 +92,11 @@ function Login() {
     <div className="login-container">
       <form className="login" onSubmit={handleSubmit}>
 
-        <h2>Welcome Back 👋</h2>
+        <h2>✨ {t("login.title")}</h2>
 
         <input
           type="text"
-          placeholder="Username"
+          placeholder={t("login.username")}
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           disabled={loading}
@@ -97,14 +104,14 @@ function Login() {
 
         <input
           type="password"
-          placeholder="Password"
+          placeholder={t("login.password")}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           disabled={loading}
         />
 
         <button type="submit" disabled={loading}>
-          {loading ? "Loading..." : "Login"}
+          {loading ? t("login.loading") : t("login.submit")}
         </button>
 
       </form>

@@ -2,13 +2,20 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import "./AdminTable.css";
+import { useLanguage } from "./LanguageContext";
+import { useLoading } from "./LoadingContext";
 
 function AdminTable() {
+  const { t } = useLanguage();
+  const { startLoading } = useLoading();
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const token = localStorage.getItem("token");
 
   const loadData = async () => {
+    setLoading(true);
+    const stopLoading = startLoading();
     try {
       const res = await axios.get("http://localhost:5000/api/comset", {
         headers: {
@@ -23,8 +30,8 @@ function AdminTable() {
       if (err.response?.status === 401) {
         Swal.fire({
           icon: "warning",
-          title: "Session หมดอายุ",
-          text: "กรุณา login ใหม่",
+          title: t("admin.sessionExpired"),
+          text: t("admin.loginAgain"),
         });
 
         localStorage.removeItem("token");
@@ -32,15 +39,28 @@ function AdminTable() {
       } else {
         Swal.fire({
           icon: "error",
-          title: "โหลดข้อมูลไม่สำเร็จ",
+          title: t("admin.loadFailed"),
         });
       }
+    } finally {
+      setLoading(false);
+      stopLoading();
     }
   };
 
   const deleteItem = async (id) => {
-    if (!window.confirm("ต้องการลบสินค้านี้จริงไหม?")) return;
+    const confirmation = await Swal.fire({
+      icon: "warning",
+      title: t("admin.confirmDelete"),
+      showCancelButton: true,
+      confirmButtonText: t("alert.confirm"),
+      cancelButtonText: t("alert.cancel"),
+      confirmButtonColor: "#b5f36d",
+      reverseButtons: true,
+    });
+    if (!confirmation.isConfirmed) return;
 
+    const stopLoading = startLoading();
     try {
       await axios.delete(
         `http://localhost:5000/api/comset/delete/${id}`,
@@ -53,23 +73,35 @@ function AdminTable() {
 
       Swal.fire({
         icon: "success",
-        title: "ลบสำเร็จ",
+        title: t("admin.deleted"),
       });
 
-      loadData();
+      await loadData();
     } catch (err) {
       Swal.fire({
         icon: "error",
-        title: "ลบไม่สำเร็จ",
+        title: t("admin.deleteFailed"),
       });
+    } finally {
+      stopLoading();
     }
   };
 
   const updateItem = async (id) => {
-    const newPrice = prompt("ใส่ราคาใหม่:");
+    const { value: newPrice, isConfirmed } = await Swal.fire({
+      title: t("admin.newPrice"),
+      input: "number",
+      inputAttributes: { min: 0, step: "any" },
+      showCancelButton: true,
+      confirmButtonText: t("alert.confirm"),
+      cancelButtonText: t("alert.cancel"),
+      confirmButtonColor: "#b5f36d",
+      reverseButtons: true,
+    });
 
-    if (!newPrice) return;
+    if (!isConfirmed || newPrice === "" || newPrice === undefined) return;
 
+    const stopLoading = startLoading();
     try {
       await axios.put(
         `http://localhost:5000/api/comset/update/${id}`,
@@ -83,15 +115,17 @@ function AdminTable() {
 
       Swal.fire({
         icon: "success",
-        title: "อัปเดตสำเร็จ",
+        title: t("admin.updated"),
       });
 
-      loadData();
+      await loadData();
     } catch (err) {
       Swal.fire({
         icon: "error",
-        title: "อัปเดตไม่สำเร็จ",
+        title: t("admin.updateFailed"),
       });
+    } finally {
+      stopLoading();
     }
   };
 
@@ -101,29 +135,35 @@ function AdminTable() {
 
   return (
     <div className="table-container">
-      <h1>Admin – จัดการข้อมูล Comset</h1>
+      <h1>{t("admin.tableTitle")}</h1>
 
       <table>
         <thead>
           <tr>
             <th>ID</th>
-            <th>Name</th>
+            <th>{t("table.name")}</th>
             <th>CPU</th>
             <th>GPU</th>
             <th>RAM</th>
-            <th>Storage</th>
-            <th>Price</th>
-            <th>Tier</th>
-            <th>Performance</th>
-            <th>Price Score</th>
-            <th>Upgrade</th>
-            <th>Efficiency</th>
-            <th>Action</th>
+            <th>{t("table.storage")}</th>
+            <th>{t("table.price")}</th>
+            <th>{t("table.tier")}</th>
+            <th>{t("table.performance")}</th>
+            <th>{t("table.priceScore")}</th>
+            <th>{t("table.upgrade")}</th>
+            <th>{t("table.efficiency")}</th>
+            <th>{t("admin.action")}</th>
           </tr>
         </thead>
 
         <tbody>
-          {data.map((item) => (
+          {loading
+            ? Array.from({ length: 5 }, (_, row) => (
+                <tr className="table-skeleton-row" key={`loading-${row}`}>
+                  <td colSpan="13"><span className="table-skeleton-line" /></td>
+                </tr>
+              ))
+            : data.map((item) => (
             <tr key={item.id}>
               <td>{item.id}</td>
               <td>{item.name}</td>
@@ -140,15 +180,15 @@ function AdminTable() {
 
               <td>
                 <button className="edit" onClick={() => updateItem(item.id)}>
-                  แก้ไข
+                  {t("admin.edit")}
                 </button>
 
                 <button className="delete" onClick={() => deleteItem(item.id)}>
-                  ลบ
+                  {t("admin.delete")}
                 </button>
               </td>
             </tr>
-          ))}
+            ))}
         </tbody>
       </table>
     </div>

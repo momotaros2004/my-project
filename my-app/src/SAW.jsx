@@ -2,29 +2,30 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./SAW.css";
+import { useLanguage } from "./LanguageContext";
+import { useLoading } from "./LoadingContext";
+import Swal from "sweetalert2";
 
 function SAW() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
+  const { startLoading } = useLoading();
 
   const [performance, setPerformance] = useState("");
   const [price, setPrice] = useState("");
   const [upgrade, setUpgrade] = useState("");
   const [efficiency, setEfficiency] = useState("");
 
-  // popup state
-  const [popup, setPopup] = useState({
-    show: false,
-    type: "",
-    message: "",
+  const showPopup = (type, message) => Swal.fire({
+    icon: type,
+    title: type === "error" ? t("login.error.title") : t("recommend.success"),
+    text: message,
+    confirmButtonText: t("alert.ok"),
+    confirmButtonColor: "#b5f36d",
+    timer: type === "success" ? 900 : undefined,
+    showConfirmButton: type !== "success",
+    timerProgressBar: type === "success",
   });
-
-  const showPopup = (type, message) => {
-    setPopup({ show: true, type, message });
-
-    setTimeout(() => {
-      setPopup({ show: false, type: "", message: "" });
-    }, 2000);
-  };
 
   const p = Number(performance || 0);
   const pr = Number(price || 0);
@@ -35,12 +36,12 @@ function SAW() {
 
   const handleNext = async () => {
     if (!performance || !price || !upgrade || !efficiency) {
-      showPopup("error", "⚠ กรุณาเลือก weight ให้ครบ");
+      await showPopup("error", t("saw.required"));
       return;
     }
 
     if (total !== 1) {
-      showPopup("error", `❌ ผลรวม weight ต้องเท่ากับ 1 (ตอนนี้ = ${total})`);
+      await showPopup("error", t("saw.sumError", { total }));
       return;
     }
 
@@ -53,9 +54,10 @@ function SAW() {
       efficiency: e,
     };
 
+    const stopLoading = startLoading();
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/saw/calc",
+        "http://localhost:5000/api/saw/filter",
         { weights: weightData },
         {
           headers: {
@@ -69,91 +71,97 @@ function SAW() {
         JSON.stringify(res.data.results)
       );
 
-      showPopup("success", "✅ คำนวณสำเร็จ");
-
-      setTimeout(() => {
-        navigate("/SAWResult");
-      }, 1000);
+      await showPopup("success", t("saw.calculated"));
+      navigate("/SAWResult");
 
     } catch (err) {
       console.log(err);
 
       if (err.response?.status === 401) {
-        showPopup("error", "❌ Session หมดอายุ กรุณา login ใหม่");
-
-        setTimeout(() => {
-          navigate("/login");
-        }, 1500);
+        await showPopup("error", t("saw.expired"));
+        navigate("/login");
       } else {
-        showPopup("error", "❌ เกิดข้อผิดพลาด");
+        await showPopup("error", t("saw.error"));
       }
+    } finally {
+      stopLoading();
     }
   };
 
   return (
     <div className="saw-container">
 
-      {/* POPUP */}
-      {popup.show && (
-        <div className={`popup ${popup.type}`}>
-          {popup.message}
-        </div>
-      )}
-
       <div className="saw-box">
-        <h2>SAW WEIGHT</h2>
-
-        <select onChange={(e) => setPerformance(e.target.value)}>
-          <option value="">Performance</option>
-          <option value="0.1">0.1</option>
-          <option value="0.2">0.2</option>
-          <option value="0.3">0.3</option>
-          <option value="0.4">0.4</option>
-        </select>
-
-        <select onChange={(e) => setPrice(e.target.value)}>
-          <option value="">Price</option>
-          <option value="0.1">0.1</option>
-          <option value="0.2">0.2</option>
-          <option value="0.3">0.3</option>
-          <option value="0.4">0.4</option>
-        </select>
-
-        <select onChange={(e) => setUpgrade(e.target.value)}>
-          <option value="">Upgrade</option>
-          <option value="0.1">0.1</option>
-          <option value="0.2">0.2</option>
-          <option value="0.3">0.3</option>
-          <option value="0.4">0.4</option>
-        </select>
-
-        <select onChange={(e) => setEfficiency(e.target.value)}>
-          <option value="">Efficiency</option>
-          <option value="0.1">0.1</option>
-          <option value="0.2">0.2</option>
-          <option value="0.3">0.3</option>
-          <option value="0.4">0.4</option>
-        </select>
-
-        <p
-          style={{
-            color: total === 1 ? "#00ffcc" : "red",
-            marginTop: "10px",
-            fontWeight: "bold",
+        <button
+          className="saw-back-button"
+          onClick={() => {
+            const stopLoading = startLoading();
+            setTimeout(() => {
+              navigate("/home");
+              stopLoading();
+            }, 350);
           }}
         >
-          Total Weight : {total}
+          <span aria-hidden="true">←</span> {t("saw.back")}
+        </button>
+        <span className="saw-eyebrow">{t("saw.kicker")}</span>
+        <h2>{t("saw.title")}</h2>
+        <p className="saw-description">{t("saw.description")}</p>
+
+        <label className="weight-field">
+          <span>{t("saw.performance")}</span>
+          <select onChange={(e) => setPerformance(e.target.value)}>
+            <option value="">{t("saw.choose")}</option>
+            <option value="0.1">0.1</option>
+            <option value="0.2">0.2</option>
+            <option value="0.3">0.3</option>
+            <option value="0.4">0.4</option>
+          </select>
+        </label>
+
+        <label className="weight-field">
+          <span>{t("saw.price")}</span>
+          <select onChange={(e) => setPrice(e.target.value)}>
+            <option value="">{t("saw.choose")}</option>
+            <option value="0.1">0.1</option>
+            <option value="0.2">0.2</option>
+            <option value="0.3">0.3</option>
+            <option value="0.4">0.4</option>
+          </select>
+        </label>
+
+        <label className="weight-field">
+          <span>{t("saw.upgrade")}</span>
+          <select onChange={(e) => setUpgrade(e.target.value)}>
+            <option value="">{t("saw.choose")}</option>
+            <option value="0.1">0.1</option>
+            <option value="0.2">0.2</option>
+            <option value="0.3">0.3</option>
+            <option value="0.4">0.4</option>
+          </select>
+        </label>
+
+        <label className="weight-field">
+          <span>{t("saw.efficiency")}</span>
+          <select onChange={(e) => setEfficiency(e.target.value)}>
+            <option value="">{t("saw.choose")}</option>
+            <option value="0.1">0.1</option>
+            <option value="0.2">0.2</option>
+            <option value="0.3">0.3</option>
+            <option value="0.4">0.4</option>
+          </select>
+        </label>
+
+        <p className={`weight-total ${total === 1 ? "is-valid" : "is-invalid"}`}>
+          {t("saw.total")} : {total}
         </p>
 
         <button
+          type="button"
+          data-no-loading
           onClick={handleNext}
-          disabled={total !== 1}
-          style={{
-            opacity: total === 1 ? 1 : 0.4,
-            cursor: total === 1 ? "pointer" : "not-allowed",
-          }}
         >
-          NEXT
+          {t("saw.next")}
         </button>
       </div>
     </div>

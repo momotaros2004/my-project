@@ -2,8 +2,12 @@ import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import "./Admin.css";
+import { useLanguage } from "./LanguageContext";
+import { useLoading } from "./LoadingContext";
 
 function Admin() {
+  const { t } = useLanguage();
+  const { startLoading } = useLoading();
   const [selectedTable, setSelectedTable] = useState("");
   const [form, setForm] = useState({});
 
@@ -40,7 +44,7 @@ function Admin() {
 
   const handleSubmit = async () => {
     if (!selectedTable) {
-      Swal.fire("กรุณาเลือกตารางก่อน");
+      Swal.fire(t("admin.tables"));
       return;
     }
 
@@ -49,12 +53,13 @@ function Admin() {
     if (!token) {
       Swal.fire({
         icon: "error",
-        title: "ไม่ได้เข้าสู่ระบบ",
-        text: "กรุณา login ก่อนใช้งาน",
+        title: t("admin.notLoggedIn"),
+        text: t("admin.loginFirst"),
       });
       return;
     }
 
+    const stopLoading = startLoading();
     try {
       const url =
         selectedTable === "comset"
@@ -69,8 +74,8 @@ function Admin() {
 
       Swal.fire({
         icon: "success",
-        title: "สำเร็จ",
-        text: "เพิ่มข้อมูลเรียบร้อย",
+        title: t("admin.success"),
+        text: t("admin.added"),
       });
 
       setForm(selectedTable === "comset" ? comsetFields : productFields);
@@ -80,44 +85,46 @@ function Admin() {
       if (err.response?.status === 401) {
         Swal.fire({
           icon: "warning",
-          title: "Session หมดอายุ",
-          text: "กรุณา login ใหม่",
+          title: t("admin.sessionExpired"),
+          text: t("admin.loginAgain"),
         });
         localStorage.removeItem("token");
         window.location.href = "/login";
       } else {
         Swal.fire({
           icon: "error",
-          title: "เกิดข้อผิดพลาด",
-          text: "ไม่สามารถเพิ่มข้อมูลได้",
+          title: t("admin.error"),
+          text: t("admin.addFailed"),
         });
       }
+    } finally {
+      stopLoading();
     }
   };
 
   return (
     <div className="admin-container">
-      <h1>Admin – เพิ่มข้อมูล</h1>
+      <h1>{t("admin.addTitle")}</h1>
 
       <div className="table-select">
         <button
           className={selectedTable === "comset" ? "active" : ""}
           onClick={() => handleSelectTable("comset")}
         >
-          เพิ่มข้อมูล Comset
+          {t("admin.add")} {t("admin.comset")}
         </button>
 
         <button
           className={selectedTable === "products" ? "active" : ""}
           onClick={() => handleSelectTable("products")}
         >
-          เพิ่มข้อมูล Products
+          {t("admin.add")} {t("admin.products")}
         </button>
       </div>
 
       {selectedTable && (
         <div className="form-container">
-          <h2>กำลังเพิ่มข้อมูลใน: {selectedTable}</h2>
+          <h2>{t("admin.adding", { table: selectedTable === "comset" ? t("admin.comset") : t("admin.products") })}</h2>
 
           {Object.keys(form).map((field) => {
             if (selectedTable === "products" && field === "type") {
@@ -128,7 +135,7 @@ function Admin() {
                   onChange={handleChange}
                   value={form[field]}
                 >
-                  <option value="">เลือกประเภทสินค้า</option>
+                  <option value="">{t("admin.productType")}</option>
                   <option value="cpu">CPU</option>
                   <option value="gpu">GPU</option>
                   <option value="ram">RAM</option>
@@ -144,7 +151,7 @@ function Admin() {
               <input
                 key={field}
                 name={field}
-                placeholder={field}
+                placeholder={t(`admin.field.${field}`)}
                 value={form[field]}
                 onChange={handleChange}
               />
@@ -152,7 +159,7 @@ function Admin() {
           })}
 
           <button className="submit-btn" onClick={handleSubmit}>
-            เพิ่มข้อมูล
+            {t("admin.add")}
           </button>
         </div>
       )}

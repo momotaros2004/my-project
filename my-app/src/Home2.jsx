@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home2.css";
+import { useLanguage } from "./LanguageContext";
+import { useLoading } from "./LoadingContext";
+import Swal from "sweetalert2";
 
 function Home2() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
+  const { startLoading } = useLoading();
 
   const [cpu, setCpu] = useState("");
   const [gpu, setGpu] = useState("");
   const [ram, setRam] = useState("");
   const [storage, setStorage] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   // 🔐 protect page
@@ -22,16 +26,15 @@ function Home2() {
   }, [navigate]);
 
   const handleSubmit = async () => {
-    setError("");
-
     if (!cpu || !gpu || !ram || !storage) {
-      setError("⚠ กรุณาเลือกข้อมูลให้ครบ");
+      Swal.fire({ icon: "warning", title: t("login.required.title"), text: t("pc.required"), confirmButtonText: t("alert.ok") });
       return;
     }
 
     const token = localStorage.getItem("token");
 
     setLoading(true);
+    const stopLoading = startLoading();
 
     try {
       const res = await fetch("http://localhost:5000/api/check-com", {
@@ -53,11 +56,12 @@ function Home2() {
           },
         });
       } else {
-        setError("❌ ของหมด / ไม่มีสเปคนี้ในระบบ");
+        await Swal.fire({ icon: "info", title: t("recommend.none"), text: t("pc.notFound"), confirmButtonText: t("alert.ok") });
       }
     } catch (err) {
-      setError("เซิร์ฟเวอร์ไม่ตอบสนอง");
+      await Swal.fire({ icon: "error", title: t("login.error.title"), text: t("login.error.text"), confirmButtonText: t("alert.ok") });
     } finally {
+      stopLoading();
       setLoading(false);
     }
   };
@@ -65,39 +69,40 @@ function Home2() {
   return (
     <div className="pc-container">
       <div className="pc-card">
-        <h1 className="title">เลือกสเปคคอม</h1>
-
-        {error && <p className="error-box">{error}</p>}
+        <button className="pc-back-button" onClick={() => navigate("/beforehome")}>
+          <span aria-hidden="true">←</span> {t("pc.back")}
+        </button>
+        <h1 className="title">{t("pc.title")}</h1>
 
         <select value={cpu} onChange={(e) => setCpu(e.target.value)}>
-          <option value="">CPU</option>
+          <option value="">{t("pc.choose", { field: t("pc.cpu") })}</option>
           <option value="Intel i3-12100">Intel i3-12100</option>
           <option value="Intel i5-12400">Intel i5-12400</option>
           <option value="Ryzen 5 5600">Ryzen 5 5600</option>
         </select>
 
         <select value={gpu} onChange={(e) => setGpu(e.target.value)}>
-          <option value="">GPU</option>
+          <option value="">{t("pc.choose", { field: t("pc.gpu") })}</option>
           <option value="GTX 1650">GTX 1650</option>
           <option value="RTX 3060">RTX 3060</option>
           <option value="RTX 4070">RTX 4070</option>
         </select>
 
         <select value={ram} onChange={(e) => setRam(e.target.value)}>
-          <option value="">RAM</option>
+          <option value="">{t("pc.choose", { field: t("pc.ram") })}</option>
           <option value="8 GB">8 GB</option>
           <option value="16 GB">16 GB</option>
           <option value="32 GB">32 GB</option>
         </select>
 
         <select value={storage} onChange={(e) => setStorage(e.target.value)}>
-          <option value="">Storage</option>
+          <option value="">{t("pc.choose", { field: t("pc.storage") })}</option>
           <option value="SSD 512GB">SSD 512GB</option>
           <option value="SSD 1TB">SSD 1TB</option>
         </select>
 
         <button onClick={handleSubmit} disabled={loading}>
-          {loading ? "กำลังตรวจสอบ..." : "✔ ตรวจสอบ"}
+          {loading ? t("pc.loading") : t("pc.submit")}
         </button>
       </div>
     </div>
