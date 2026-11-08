@@ -7,11 +7,13 @@
 
 .saw-container {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
+  height: auto;
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 24px 16px;
 }
 
 /* กล่องหลัก */
@@ -20,7 +22,7 @@
   background: #111;
   padding: 40px;
   border-radius: 16px;
-  width: 380px;
+  width: min(440px, 100%);
   box-shadow: 0 0 30px rgba(0,0,0,0.6);
   text-align: center;
 }
@@ -31,6 +33,33 @@
   color: #00eaff;
   margin-bottom: 20px;
   letter-spacing: 2px;
+}
+
+.saw-selection-summary {
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  border: 1px solid rgba(181, 243, 109, .24);
+  border-radius: 12px;
+  background: rgba(181, 243, 109, .07);
+  color: #eef7e6;
+  text-align: left;
+}
+
+.saw-selection-summary strong {
+  color: #b5f36d;
+  font-size: 13px;
+}
+
+.saw-selection-summary p {
+  margin: 6px 0;
+  line-height: 1.5;
+}
+
+.saw-selection-summary small {
+  display: block;
+  color: #a6b6cb;
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 /* select */

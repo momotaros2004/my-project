@@ -70,7 +70,7 @@ function Home() {
   ];
 
   const itemRequirements = {
-    1: { cpu: "Intel Core i3-540 / AMD Athlon 200GE", gpu: "Intel HD 4000 / Radeon R5 200", ram: "4 GB", storage: "ประมาณ 30 GB", os: "Windows 10/11 64-bit" },
+    1: { cpu: "Intel Core i5 / AMD Ryzen 5 หรือสูงกว่า", gpu: "Intel HD 4000 / Radeon R5 200", ram: "4 GB", storage: "ประมาณ 30 GB", os: "Windows 10/11 64-bit" },
     2: { cpu: "Intel Core i5-6600 / Ryzen 5 1400", gpu: "GTX 960 / Radeon RX 470 / Intel Arc A580", ram: "8 GB", storage: "SSD, ประมาณ 128 GB", os: "Windows 10 64-bit" },
     3: { cpu: "Intel Core i3-4170 / AMD FX-8120", gpu: "GeForce GTX 460 1 GB / Radeon HD 6850 1 GB", ram: "8 GB", storage: "50 GB", os: "Windows 10 64-bit" },
     4: { cpu: "Intel Core i5-750 หรือ CPU 4 threads", gpu: "DirectX 11, VRAM อย่างน้อย 1 GB", ram: "8 GB", storage: "85 GB", os: "Windows 10" },

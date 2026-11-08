@@ -10,28 +10,6 @@ const criteria = [
   { key: "efficiency", label: "saw.efficiency" },
 ];
 
-// ✅ Multi-tier SAW weighting system (keep this version)
-const tierWeights = {
-  low: {
-    performance: 0.35,
-    price_score: 0.45,
-    upgrade_score: 0.15,
-    efficiency: 0.05,
-  },
-  mid: {
-    performance: 0.45,
-    price_score: 0.25,
-    upgrade_score: 0.2,
-    efficiency: 0.1,
-  },
-  high: {
-    performance: 0.55,
-    price_score: 0.1,
-    upgrade_score: 0.2,
-    efficiency: 0.15,
-  },
-};
-
 const formatPrice = (value) => {
   const numericPrice = typeof value === "number"
     ? value
@@ -44,6 +22,10 @@ function SAWResult() {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [coms, setComs] = useState([]);
+  const [weights, setWeights] = useState({});
+  const [selectedPrograms, setSelectedPrograms] = useState([]);
+  const [requirements, setRequirements] = useState(null);
+  const [filterStats, setFilterStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -51,7 +33,15 @@ function SAWResult() {
     try {
       const raw = localStorage.getItem("saw_results");
       const parsed = raw ? JSON.parse(raw) : [];
-      data = Array.isArray(parsed) ? parsed : [];
+      if (Array.isArray(parsed)) {
+        data = parsed;
+      } else {
+        data = Array.isArray(parsed?.results) ? parsed.results : [];
+        setWeights(parsed?.weights || {});
+        setSelectedPrograms(Array.isArray(parsed?.selectedPrograms) ? parsed.selectedPrograms : []);
+        setRequirements(parsed?.requirements || null);
+        setFilterStats(parsed?.filterStats || null);
+      }
     } catch (err) {
       console.error("Invalid saw_results:", err);
     }
@@ -62,10 +52,14 @@ function SAWResult() {
   }, []);
 
   const top3 = coms.slice(0, 3);
-
-  // optional helper: choose tier (you can later connect to backend/user input)
-  const getTier = () => "mid";
-  const weights = tierWeights[getTier()];
+  const minimumSpecLabels = requirements ? [
+    requirements.cpuTier > 0
+      ? `Core i${requirements.cpuTier} / Ryzen ${requirements.cpuTier}+`
+      : `${requirements.cpuCores}+ CPU cores`,
+    requirements.gpuLabel,
+    `${requirements.ramGB}+ GB RAM`,
+    `${requirements.storageGB}+ GB storage`,
+  ] : [];
 
   if (loading) {
     return (
@@ -107,12 +101,54 @@ function SAWResult() {
     );
   }
 
+  if (top3.length === 0) {
+    return (
+      <div className="result-container">
+        <button className="result-back-button" onClick={() => navigate("/home")}>
+          <span aria-hidden="true">â†</span>{t("result.backToGames")}
+        </button>
+        <section className="result-empty-state">
+          <h2>{t("result.noMatch")}</h2>
+          <p>{t("result.noMatchDetails")}</p>
+          {selectedPrograms.length > 0 && (
+            <div className="result-program-summary">
+              <strong>{t("result.selectedPrograms")}</strong>
+              <div className="result-program-chips">
+                {selectedPrograms.map((program) => <span key={program.id}>{program.title}</span>)}
+              </div>
+              {minimumSpecLabels.length > 0 && <p className="result-minimum-specs">{t("result.minimumSpecs")}: {minimumSpecLabels.join(" · ")}</p>}
+            </div>
+          )}
+          <button className="result-empty-back" onClick={() => navigate("/home")}>
+            {t("result.backToGames")}
+          </button>
+        </section>
+      </div>
+    );
+  }
+
   return (
     <div className="result-container">
       <button className="result-back-button" onClick={() => navigate("/home")}>
         <span aria-hidden="true">←</span>{t("saw.back")}
       </button>
       <h2>{t("result.title")}</h2>
+
+      <section className="result-program-summary">
+        <div>
+          <strong>{t("result.selectedPrograms")}</strong>
+          <p>{t("result.minimumNotice")}</p>
+        </div>
+        <div className="result-program-chips">
+          {selectedPrograms.map((program) => <span key={program.id}>{program.title}</span>)}
+        </div>
+        {minimumSpecLabels.length > 0 && (
+          <p className="result-minimum-specs">{t("result.minimumSpecs")}: {minimumSpecLabels.join(" · ")}</p>
+        )}
+        {filterStats && (
+          <small>{filterStats.eligibleBuilds} / {filterStats.totalBuilds} {t("result.eligibleBuilds")}</small>
+        )}
+      </section>
 
       <table className="saw-table">
         <thead>
@@ -127,7 +163,7 @@ function SAWResult() {
         <tbody>
           {criteria.map((c) => (
             <tr key={c.key}>
-              <td>{t(c.label)}</td>
+              <td>{t(c.label)} ({Math.round((weights[c.key] || 0) * 100)}%)</td>
 
               {top3.map((pc, idx) => (
                 <td key={pc.id || idx}>

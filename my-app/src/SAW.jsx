@@ -1,15 +1,25 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./SAW.css";
 import { useLanguage } from "./LanguageContext";
 import { useLoading } from "./LoadingContext";
 import Swal from "sweetalert2";
 
 function SAW() {
+  const location = useLocation();
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { startLoading } = useLoading();
+  let cart = location.state?.cart;
+  if (!Array.isArray(cart)) {
+    try {
+      cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    } catch {
+      cart = [];
+    }
+  }
+  const selectedPrograms = cart.map((item) => item.title).filter(Boolean);
 
   const [performance, setPerformance] = useState("");
   const [price, setPrice] = useState("");
@@ -35,6 +45,17 @@ function SAW() {
   const total = +(p + pr + u + e).toFixed(2);
 
   const handleNext = async () => {
+    if (cart.length === 0) {
+      await Swal.fire({
+        icon: "warning",
+        title: t("saw.noPrograms"),
+        confirmButtonText: t("alert.ok"),
+        confirmButtonColor: "#b5f36d",
+      });
+      navigate("/home", { replace: true });
+      return;
+    }
+
     if (!performance || !price || !upgrade || !efficiency) {
       await showPopup("error", t("saw.required"));
       return;
@@ -49,8 +70,8 @@ function SAW() {
 
     const weightData = {
       performance: p,
-      price: pr,
-      upgrade: u,
+      price_score: pr,
+      upgrade_score: u,
       efficiency: e,
     };
 
@@ -58,7 +79,7 @@ function SAW() {
     try {
       const res = await axios.post(
         "http://localhost:5000/api/saw/filter",
-        { weights: weightData },
+        { weights: weightData, gameIds: cart.map((item) => Number(item.id)) },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -66,10 +87,19 @@ function SAW() {
         }
       );
 
-      localStorage.setItem(
-        "saw_results",
-        JSON.stringify(res.data.results)
-      );
+      localStorage.setItem("saw_results", JSON.stringify(res.data));
+
+      if (res.data.results.length === 0) {
+        await Swal.fire({
+          icon: "info",
+          title: t("result.noMatch"),
+          text: t("result.noMatchDetails"),
+          confirmButtonText: t("alert.ok"),
+          confirmButtonColor: "#b5f36d",
+        });
+        navigate("/SAWResult");
+        return;
+      }
 
       await showPopup("success", t("saw.calculated"));
       navigate("/SAWResult");
@@ -97,7 +127,7 @@ function SAW() {
           onClick={() => {
             const stopLoading = startLoading();
             setTimeout(() => {
-              navigate("/home");
+              navigate("/home", { state: { cart } });
               stopLoading();
             }, 350);
           }}
@@ -107,6 +137,12 @@ function SAW() {
         <span className="saw-eyebrow">{t("saw.kicker")}</span>
         <h2>{t("saw.title")}</h2>
         <p className="saw-description">{t("saw.description")}</p>
+
+        <section className="saw-selection-summary" aria-live="polite">
+          <strong>{t("saw.selectedPrograms")}</strong>
+          <p>{selectedPrograms.length ? selectedPrograms.join(", ") : t("recommend.noGames")}</p>
+          <small>{t("saw.minimumRule")}</small>
+        </section>
 
         <label className="weight-field">
           <span>{t("saw.performance")}</span>

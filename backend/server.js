@@ -4,6 +4,11 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import db from "./database.js";
+import {
+  GAME_REQUIREMENTS,
+  meetsRequirements,
+  requirementsForGameIds,
+} from "./specRequirements.js";
 
 dotenv.config();
 
@@ -234,28 +239,61 @@ app.post("/api/check-com", verifyToken, (req, res) => {
 
 // ======================= SAW (FIXED + PROTECTED) =======================
 app.post("/api/saw/filter", verifyToken, (req, res) => {
-  const { weights } = req.body;
+  const rawWeights = req.body?.weights;
+  const rawGameIds = req.body?.gameIds;
 
-  if (!weights) {
+  if (!rawWeights) {
     return res.status(400).json({ error: "Missing weights" });
   }
 
+  const weights = {
+    performance: Number(rawWeights.performance),
+    price_score: Number(rawWeights.price_score ?? rawWeights.price),
+    upgrade_score: Number(rawWeights.upgrade_score ?? rawWeights.upgrade),
+    efficiency: Number(rawWeights.efficiency),
+  };
+  const weightValues = Object.values(weights);
+  const weightTotal = weightValues.reduce((sum, value) => sum + value, 0);
+  if (weightValues.some((value) => !Number.isFinite(value) || value < 0)
+    || Math.abs(weightTotal - 1) > 0.001) {
+    return res.status(400).json({ error: "Weights must be non-negative and add up to 1" });
+  }
+
+  if (!Array.isArray(rawGameIds) || rawGameIds.length === 0) {
+    return res.status(400).json({ error: "Select at least one program" });
+  }
+
+  const gameIds = [...new Set(rawGameIds.map(Number))];
+  if (gameIds.some((id) => !Number.isInteger(id) || !GAME_REQUIREMENTS[id])) {
+    return res.status(400).json({ error: "One or more selected programs are invalid" });
+  }
+
+  const requirements = requirementsForGameIds(gameIds);
+  const selectedPrograms = gameIds.map((id) => ({ id, title: GAME_REQUIREMENTS[id].title }));
+
   db.query("SELECT * FROM comset", (err, coms) => {
-    if (err) return res.status(500).json({ error: err });
+    if (err) return res.status(500).json({ error: "Could not load PC builds" });
 
-    const scored = coms.map((c) => {
+    const eligible = coms.filter((build) => meetsRequirements(build, requirements));
+    const results = eligible.map((build) => {
       const totalScore =
-        c.performance * weights.performance +
-        c.price_score * weights.price +
-        c.upgrade_score * weights.upgrade +
-        c.efficiency * weights.efficiency;
+        Number(build.performance) * weights.performance +
+        Number(build.price_score) * weights.price_score +
+        Number(build.upgrade_score) * weights.upgrade_score +
+        Number(build.efficiency) * weights.efficiency;
 
-      return { ...c, totalScore };
+      return { ...build, totalScore };
     });
 
-    scored.sort((a, b) => b.totalScore - a.totalScore);
+    results.sort((a, b) => b.totalScore - a.totalScore || Number(a.price) - Number(b.price));
 
-    res.json({ results: scored });
+    return res.json({
+      results,
+      weights,
+      requirements,
+      selectedPrograms,
+      filterStats: { totalBuilds: coms.length, eligibleBuilds: results.length },
+    });
   });
 });
 
