@@ -210,7 +210,12 @@ function SAWResult() {
 
             <b>{Number(c.totalScore || c.total || 0).toFixed(2)}</b>
 
-            <button className="buy-btn">{t("result.buy")}</button>
+            <button
+              className="buy-btn"
+              onClick={() => navigate("/payment", { state: { com: c } })}
+            >
+              {t("result.buy")}
+            </button>
           </div>
         ))}
       </div>

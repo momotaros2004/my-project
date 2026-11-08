@@ -122,8 +122,8 @@ export default function Recommend2() {
           </div>
         </section>
 
-        <button className="rec-primary-button" onClick={() => navigate("/home2")}>
-          {t("recommend.back")}<span aria-hidden="true">→</span>
+        <button className="rec-primary-button" onClick={() => navigate("/payment", { state: { com } })}>
+          {t("payment.confirm")}<span aria-hidden="true">→</span>
         </button>
       </div>
     </div>

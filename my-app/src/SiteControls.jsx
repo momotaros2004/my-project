@@ -3,12 +3,14 @@ import { useLocation } from "react-router-dom";
 import ProfileMenu from "./ProfileMenu";
 import { useLanguage } from "./LanguageContext";
 import { useLoading } from "./LoadingContext";
+import { isAdminUser } from "./auth";
 
 function SiteControls() {
   const location = useLocation();
   const { language, toggleLanguage, t } = useLanguage();
   const { startLoading } = useLoading();
   const isAuthenticated = Boolean(localStorage.getItem("token"));
+  const isAdmin = isAuthenticated && isAdminUser();
   const previousPath = useRef(location.pathname);
 
   useEffect(() => {
@@ -48,7 +50,7 @@ function SiteControls() {
         </svg>
         <span>{language === "th" ? "EN" : "ไทย"}</span>
       </button>
-      {isAuthenticated && <ProfileMenu key={location.pathname} />}
+      {isAuthenticated && <ProfileMenu key={location.pathname} isAdmin={isAdmin} />}
     </div>
   );
 }

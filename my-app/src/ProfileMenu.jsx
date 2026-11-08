@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useLanguage } from "./LanguageContext";
 
-function ProfileMenu() {
+function ProfileMenu({ isAdmin = false }) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
   const navigate = useNavigate();
@@ -73,6 +73,27 @@ function ProfileMenu() {
         <div className="profile-dropdown" role="menu">
           <span className="profile-dropdown-label">{t("profile.signedIn")}</span>
           <strong className="profile-dropdown-user">{username}</strong>
+          {isAdmin && (
+            <>
+              <div className="profile-dropdown-divider" />
+              <button
+                className="profile-admin-link"
+                type="button"
+                role="menuitem"
+                onClick={() => { setIsOpen(false); navigate("/admin"); }}
+              >
+                <span aria-hidden="true">⚙</span>{t("profile.adminPanel")}
+              </button>
+              <button
+                className="profile-admin-link"
+                type="button"
+                role="menuitem"
+                onClick={() => { setIsOpen(false); navigate("/admin/table"); }}
+              >
+                <span aria-hidden="true">▤</span>{t("profile.adminTable")}
+              </button>
+            </>
+          )}
           <div className="profile-dropdown-divider" />
           <button className="profile-logout" type="button" role="menuitem" onClick={handleLogout}>
             <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">

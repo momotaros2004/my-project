@@ -4,6 +4,7 @@ import Login from "./login.jsx";
 import Home from "./Home";
 import Recommend from "./Recommend";
 import Recommend2 from "./Recommend2";
+import Payment from "./Payment";
 import BeforeHome from "./beforehome.jsx";
 import Home2 from "./Home2";
 import Admin from "./Admin";
@@ -72,9 +73,18 @@ function App() {
         />
 
         <Route
-          path="/admin"
+          path="/payment"
           element={
             <ProtectedRoute>
+              <Payment />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute adminOnly>
               <Admin />
             </ProtectedRoute>
           }
@@ -83,7 +93,7 @@ function App() {
         <Route
           path="/admin/table"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute adminOnly>
               <AdminTable />
             </ProtectedRoute>
           }
