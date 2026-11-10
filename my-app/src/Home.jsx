@@ -141,10 +141,27 @@ function Home() {
     }
 
     setIsCartOpen(false);
+    const choice = await Swal.fire({
+      icon: "question",
+      title: t("home.deviceChoice.title"),
+      text: t("home.deviceChoice.text"),
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: t("home.deviceChoice.desktop"),
+      denyButtonText: t("home.deviceChoice.laptop"),
+      cancelButtonText: t("alert.cancel"),
+      confirmButtonColor: "#b5f36d",
+      denyButtonColor: "#45627a",
+      reverseButtons: true,
+    });
+
+    if (!choice.isConfirmed && !choice.isDenied) return;
+
+    const deviceType = choice.isDenied ? "laptop" : "desktop";
+    localStorage.setItem("device_type", deviceType);
     const stopLoading = startLoading();
     try {
-      await showPopup("success", t("home.continue"));
-      navigate("/SAW", { state: { cart } });
+      navigate("/SAW", { state: { cart, deviceType } });
     } finally {
       stopLoading();
     }

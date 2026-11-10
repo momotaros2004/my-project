@@ -139,14 +139,16 @@ app.get("/api/comset", verifyToken, verifyAdmin, (req, res) => {
 
 app.post("/api/comset/add", verifyToken, verifyAdmin, (req, res) => {
   const {
-    name, cpu, gpu, ram, storage, price, tier,
+    name, device_type, cpu, gpu, ram, storage, price, tier,
     performance, price_score, upgrade_score, efficiency,
   } = req.body;
 
+  const deviceType = device_type || "desktop";
   const numericPrice = Number(price);
   const scores = [performance, price_score, upgrade_score, efficiency].map(Number);
   const requiredValues = [name, cpu, gpu, ram, storage, tier];
-  if (requiredValues.some((value) => !String(value || "").trim()) ||
+  if (!["desktop", "laptop"].includes(deviceType) ||
+      requiredValues.some((value) => !String(value || "").trim()) ||
       !Number.isFinite(numericPrice) || numericPrice < 0 ||
       scores.some((score) => !Number.isFinite(score) || score < 0 || score > 100)) {
     return res.status(400).json({ error: "Complete all fields and enter valid scores from 0 to 100." });
@@ -154,12 +156,12 @@ app.post("/api/comset/add", verifyToken, verifyAdmin, (req, res) => {
 
   const sql = `
     INSERT INTO comset
-    (name, cpu, gpu, ram, storage, price, tier, performance, price_score, upgrade_score, efficiency)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    (name, device_type, cpu, gpu, ram, storage, price, tier, performance, price_score, upgrade_score, efficiency)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   db.query(sql,
-    [name.trim(), cpu.trim(), gpu.trim(), ram.trim(), storage.trim(), numericPrice, tier.trim(), ...scores],
+    [name.trim(), deviceType, cpu.trim(), gpu.trim(), ram.trim(), storage.trim(), numericPrice, tier.trim(), ...scores],
     (err, result) => {
       if (err) return res.status(500).json({ error: err });
 
@@ -172,13 +174,14 @@ app.post("/api/comset/add", verifyToken, verifyAdmin, (req, res) => {
 });
 
 app.put("/api/comset/update/:id", verifyToken, verifyAdmin, (req, res) => {
-  const { name, cpu, gpu, ram, storage, price, tier, performance, price_score, upgrade_score, efficiency } = req.body || {};
+  const { name, device_type, cpu, gpu, ram, storage, price, tier, performance, price_score, upgrade_score, efficiency } = req.body || {};
+  const deviceType = device_type || "desktop";
   const textValues = [name, cpu, gpu, ram, storage, tier].map((value) => String(value || "").trim());
   const numericPrice = Number(price);
   const rawScores = [performance, price_score, upgrade_score, efficiency];
   const scores = rawScores.map(Number);
 
-  if (textValues.some((value) => !value) || price === undefined || price === null || String(price).trim() === "" ||
+  if (!["desktop", "laptop"].includes(deviceType) || textValues.some((value) => !value) || price === undefined || price === null || String(price).trim() === "" ||
       rawScores.some((score) => score === undefined || score === null || String(score).trim() === "") ||
       !Number.isFinite(numericPrice) || numericPrice < 0 ||
       scores.some((score) => !Number.isFinite(score) || score < 0 || score > 100)) {
@@ -187,11 +190,13 @@ app.put("/api/comset/update/:id", verifyToken, verifyAdmin, (req, res) => {
 
   const sql = `
     UPDATE comset
-    SET name = ?, cpu = ?, gpu = ?, ram = ?, storage = ?, price = ?, tier = ?,
+    SET name = ?, device_type = ?, cpu = ?, gpu = ?, ram = ?, storage = ?, price = ?, tier = ?,
         performance = ?, price_score = ?, upgrade_score = ?, efficiency = ?
     WHERE id = ?
   `;
-  const values = [...textValues, numericPrice, ...scores, req.params.id];
+  const values = [
+    textValues[0], deviceType, ...textValues.slice(1, 5), numericPrice, textValues[5], ...scores, req.params.id,
+  ];
 
   db.query(sql, values, (err, result) => {
     if (err) return res.status(500).json({ error: "Could not update PC build." });
@@ -241,6 +246,11 @@ app.post("/api/check-com", verifyToken, (req, res) => {
 app.post("/api/saw/filter", verifyToken, (req, res) => {
   const rawWeights = req.body?.weights;
   const rawGameIds = req.body?.gameIds;
+  const deviceType = req.body?.deviceType;
+
+  if (!["desktop", "laptop"].includes(deviceType)) {
+    return res.status(400).json({ error: "Choose a valid device type" });
+  }
 
   if (!rawWeights) {
     return res.status(400).json({ error: "Missing weights" });
@@ -271,7 +281,7 @@ app.post("/api/saw/filter", verifyToken, (req, res) => {
   const requirements = requirementsForGameIds(gameIds);
   const selectedPrograms = gameIds.map((id) => ({ id, title: GAME_REQUIREMENTS[id].title }));
 
-  db.query("SELECT * FROM comset", (err, coms) => {
+  db.query("SELECT * FROM comset WHERE device_type = ?", [deviceType], (err, coms) => {
     if (err) return res.status(500).json({ error: "Could not load PC builds" });
 
     const eligible = coms.filter((build) => meetsRequirements(build, requirements));
@@ -290,6 +300,7 @@ app.post("/api/saw/filter", verifyToken, (req, res) => {
     return res.json({
       results,
       weights,
+      deviceType,
       requirements,
       selectedPrograms,
       filterStats: { totalBuilds: coms.length, eligibleBuilds: results.length },

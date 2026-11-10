@@ -8,6 +8,7 @@ import { useLoading } from "./LoadingContext";
 
 const makeComsetForm = () => ({
   name: "",
+  device_type: "desktop",
   cpu: "",
   gpu: "",
   ram: "",
@@ -24,8 +25,9 @@ const makeProductForm = () => ({ name: "", type: "", detail: "", stock: "", pric
 
 const comsetFields = [
   { key: "name" },
-  { key: "cpu", type: "select", options: ["Intel i3-12100", "Intel i5-12400", "Intel i7-13700", "Ryzen 3 4100", "Ryzen 5 5600", "Ryzen 7 7700X"] },
-  { key: "gpu", type: "select", options: ["GTX 1650", "RTX 3060", "RTX 4070", "RTX 4080"] },
+  { key: "device_type", type: "select", options: ["desktop", "laptop"] },
+  { key: "cpu" },
+  { key: "gpu" },
   { key: "ram", type: "select", options: ["8 GB", "16 GB", "32 GB"] },
   { key: "storage", type: "select", options: ["SSD 512GB", "SSD 1TB", "SSD 2TB"] },
   { key: "price", type: "number", min: "0", step: "0.01" },
@@ -195,7 +197,9 @@ function Admin() {
                     <select {...commonProps}>
                       <option value="">{field.options ? t("admin.chooseOption") : t("admin.productType")}</option>
                       {(field.options || ["cpu", "gpu", "ram", "ssd", "hdd", "case", "psu"]).map((option) => (
-                        <option value={option} key={option}>{option}</option>
+                        <option value={option} key={option}>
+                          {field.key === "device_type" ? t(`device.${option}`) : option}
+                        </option>
                       ))}
                     </select>
                   ) : field.type === "textarea" ? (

@@ -24,6 +24,7 @@ function SAWResult() {
   const [coms, setComs] = useState([]);
   const [weights, setWeights] = useState({});
   const [selectedPrograms, setSelectedPrograms] = useState([]);
+  const [selectedDeviceType, setSelectedDeviceType] = useState("desktop");
   const [requirements, setRequirements] = useState(null);
   const [filterStats, setFilterStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -35,8 +36,10 @@ function SAWResult() {
       const parsed = raw ? JSON.parse(raw) : [];
       if (Array.isArray(parsed)) {
         data = parsed;
+        setSelectedDeviceType(data[0]?.device_type === "laptop" ? "laptop" : "desktop");
       } else {
         data = Array.isArray(parsed?.results) ? parsed.results : [];
+        setSelectedDeviceType(parsed?.deviceType === "laptop" || data[0]?.device_type === "laptop" ? "laptop" : "desktop");
         setWeights(parsed?.weights || {});
         setSelectedPrograms(Array.isArray(parsed?.selectedPrograms) ? parsed.selectedPrograms : []);
         setRequirements(parsed?.requirements || null);
@@ -113,6 +116,7 @@ function SAWResult() {
           {selectedPrograms.length > 0 && (
             <div className="result-program-summary">
               <strong>{t("result.selectedPrograms")}</strong>
+              <p>{t("saw.deviceType")}: {t(`device.${selectedDeviceType}`)}</p>
               <div className="result-program-chips">
                 {selectedPrograms.map((program) => <span key={program.id}>{program.title}</span>)}
               </div>
@@ -137,6 +141,7 @@ function SAWResult() {
       <section className="result-program-summary">
         <div>
           <strong>{t("result.selectedPrograms")}</strong>
+          <p>{t("saw.deviceType")}: {t(`device.${selectedDeviceType}`)}</p>
           <p>{t("result.minimumNotice")}</p>
         </div>
         <div className="result-program-chips">
@@ -237,7 +242,7 @@ function SAWResult() {
           <div className={`result-card rank-${i + 1}`} key={c.id || i}>
             <h3>{t("result.rank", { rank: i + 1 })}</h3>
 
-            <h4>MODEL #{c.id}</h4>
+            <h4>{c.name || `MODEL #${c.id}`}</h4>
 
             <p>CPU: {c.cpu}</p>
             <p>GPU: {c.gpu}</p>

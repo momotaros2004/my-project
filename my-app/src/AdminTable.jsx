@@ -74,7 +74,7 @@ function AdminTable() {
   const filteredData = useMemo(() => {
     const query = search.trim().toLowerCase();
     if (!query) return data;
-    return data.filter((item) => [item.name, item.cpu, item.gpu, item.ram, item.storage, item.tier]
+    return data.filter((item) => [item.name, item.device_type, item.cpu, item.gpu, item.ram, item.storage, item.tier]
       .some((value) => String(value ?? "").toLowerCase().includes(query)));
   }, [data, search]);
   const pageCount = Math.max(1, Math.ceil(filteredData.length / pageSize));
@@ -86,7 +86,7 @@ function AdminTable() {
   }, [search, pageSize]);
 
   const openEditForm = (item) => {
-    setEditForm({ ...item, price: parsePrice(item.price) ?? "" });
+    setEditForm({ ...item, device_type: item.device_type || "desktop", price: parsePrice(item.price) ?? "" });
   };
 
   const updateItem = async (event) => {
@@ -98,6 +98,7 @@ function AdminTable() {
     try {
       const payload = {
         name: editForm.name.trim(),
+        device_type: editForm.device_type || "desktop",
         cpu: editForm.cpu.trim(),
         gpu: editForm.gpu.trim(),
         ram: editForm.ram.trim(),
@@ -125,6 +126,7 @@ function AdminTable() {
 
   const editFields = [
     { key: "name", type: "text" },
+    { key: "device_type", type: "select" },
     { key: "cpu", type: "text" },
     { key: "gpu", type: "text" },
     { key: "ram", type: "text" },
@@ -235,6 +237,7 @@ function AdminTable() {
               <tr>
                 <th>ID</th>
                 <th>{t("table.name")}</th>
+                <th>{t("admin.field.device_type")}</th>
                 <th>CPU</th>
                 <th>GPU</th>
                 <th>RAM</th>
@@ -250,13 +253,14 @@ function AdminTable() {
             </thead>
             <tbody>
               {loading ? (
-                <tr><td className="admin-table-message" colSpan="13">{t("loading.title")}…</td></tr>
+                <tr><td className="admin-table-message" colSpan="14">{t("loading.title")}…</td></tr>
               ) : filteredData.length === 0 ? (
-                <tr><td className="admin-table-message" colSpan="13">{data.length ? t("admin.noResults") : t("admin.emptyBuilds")}</td></tr>
+                <tr><td className="admin-table-message" colSpan="14">{data.length ? t("admin.noResults") : t("admin.emptyBuilds")}</td></tr>
               ) : visibleData.map((item) => (
                 <tr key={item.id}>
                   <td>{item.id}</td>
                   <td className="admin-build-name">{item.name}</td>
+                  <td>{t(`device.${item.device_type || "desktop"}`)}</td>
                   <td>{item.cpu}</td>
                   <td>{item.gpu}</td>
                   <td>{item.ram}</td>
@@ -325,17 +329,30 @@ function AdminTable() {
                 return (
                   <label className="admin-edit-field" htmlFor={id} key={field.key}>
                     <span>{label}</span>
-                    <input
-                      id={id}
-                      name={field.key}
-                      type={field.type}
-                      min={field.min}
-                      max={field.max}
-                      step={field.step}
-                      value={editForm[field.key] ?? ""}
-                      onChange={(event) => setEditForm((current) => ({ ...current, [field.key]: event.target.value }))}
-                      required
-                    />
+                    {field.type === "select" ? (
+                      <select
+                        id={id}
+                        name={field.key}
+                        value={editForm[field.key] ?? "desktop"}
+                        onChange={(event) => setEditForm((current) => ({ ...current, [field.key]: event.target.value }))}
+                        required
+                      >
+                        <option value="desktop">{t("device.desktop")}</option>
+                        <option value="laptop">{t("device.laptop")}</option>
+                      </select>
+                    ) : (
+                      <input
+                        id={id}
+                        name={field.key}
+                        type={field.type}
+                        min={field.min}
+                        max={field.max}
+                        step={field.step}
+                        value={editForm[field.key] ?? ""}
+                        onChange={(event) => setEditForm((current) => ({ ...current, [field.key]: event.target.value }))}
+                        required
+                      />
+                    )}
                   </label>
                 );
               })}

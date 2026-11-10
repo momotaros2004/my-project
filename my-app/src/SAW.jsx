@@ -11,6 +11,8 @@ function SAW() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { startLoading } = useLoading();
+  const requestedDeviceType = location.state?.deviceType || localStorage.getItem("device_type");
+  const deviceType = requestedDeviceType === "laptop" ? "laptop" : "desktop";
   let cart = location.state?.cart;
   if (!Array.isArray(cart)) {
     try {
@@ -79,7 +81,7 @@ function SAW() {
     try {
       const res = await axios.post(
         "/api/saw/filter",
-        { weights: weightData, gameIds: cart.map((item) => Number(item.id)) },
+        { weights: weightData, gameIds: cart.map((item) => Number(item.id)), deviceType },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -107,9 +109,11 @@ function SAW() {
     } catch (err) {
       console.log(err);
 
-      if (err.response?.status === 401) {
+      if ([401, 403].includes(err.response?.status)) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("username");
         await showPopup("error", t("saw.expired"));
-        navigate("/login");
+        navigate("/login", { replace: true });
       } else {
         await showPopup("error", t("saw.error"));
       }
@@ -127,7 +131,7 @@ function SAW() {
           onClick={() => {
             const stopLoading = startLoading();
             setTimeout(() => {
-              navigate("/home", { state: { cart } });
+              navigate("/home", { state: { cart, deviceType } });
               stopLoading();
             }, 350);
           }}
@@ -141,6 +145,7 @@ function SAW() {
         <section className="saw-selection-summary" aria-live="polite">
           <strong>{t("saw.selectedPrograms")}</strong>
           <p>{selectedPrograms.length ? selectedPrograms.join(", ") : t("recommend.noGames")}</p>
+          <small>{t("saw.deviceType")}: {t(`device.${deviceType}`)}</small>
           <small>{t("saw.minimumRule")}</small>
         </section>
 
