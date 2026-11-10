@@ -78,7 +78,7 @@ function SAW() {
     const stopLoading = startLoading();
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/saw/filter",
+        "/api/saw/filter",
         { weights: weightData, gameIds: cart.map((item) => Number(item.id)) },
         {
           headers: {

@@ -37,7 +37,7 @@ function Home2() {
     const stopLoading = startLoading();
 
     try {
-      const res = await fetch("http://localhost:5000/api/check-com", {
+      const res = await fetch("/api/check-com", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

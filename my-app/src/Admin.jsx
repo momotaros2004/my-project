@@ -82,7 +82,7 @@ function Admin() {
 
     try {
       const endpoint = selectedTable === "comset" ? "comset" : "products";
-      await axios.post(`http://localhost:5000/api/${endpoint}/add`, payload, {
+      await axios.post(`/api/${endpoint}/add`, payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

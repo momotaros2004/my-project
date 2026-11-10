@@ -55,7 +55,7 @@ function AdminTable() {
     setLoading(true);
     const stopLoading = startLoading();
     try {
-      const response = await axios.get("http://localhost:5000/api/comset", {
+      const response = await axios.get("/api/comset", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setData(Array.isArray(response.data) ? response.data : []);
@@ -109,7 +109,7 @@ function AdminTable() {
         upgrade_score: Number(editForm.upgrade_score),
         efficiency: Number(editForm.efficiency),
       };
-      await axios.put(`http://localhost:5000/api/comset/update/${editForm.id}`, payload, {
+      await axios.put(`/api/comset/update/${editForm.id}`, payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setData((current) => current.map((item) => item.id === editForm.id ? { ...item, ...payload } : item));
@@ -152,7 +152,7 @@ function AdminTable() {
 
     const stopLoading = startLoading();
     try {
-      await axios.delete(`http://localhost:5000/api/comset/delete/${item.id}`, {
+      await axios.delete(`/api/comset/delete/${item.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setData((current) => current.filter((row) => row.id !== item.id));
